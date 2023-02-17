@@ -1382,6 +1382,8 @@ void setup() {
 
 ////////////////////////EEPROM/////////////
 Serial.println("BEGIN");
+Serial.print("ESP.getChip:");
+Serial.println(ESP.getChipId());
 EEPROM.begin(512);
 
 delay(500);

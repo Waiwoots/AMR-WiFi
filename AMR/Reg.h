@@ -1,14 +1,32 @@
-String Site = ("PONG");
-static char locLocation[20]    = "PONG" ; //   ใช้สำหรับ SNMP
-   
-String Mac_Address = "E8:DB:84:E1:5B"; // ESP8266 ChipID  14769026
+String Site ;
+static char locLocation[20]; //   ใช้สำหรับ SNMP   
+String Mac_Address; // ESP8266 ChipID  14769026
+byte mac[6] ;
+int ChipId = ESP.getChipId() ; // ChipID :14477438  *** ปง
 
-byte mac[] = {0xE8,0xDB,0x84,0xE1,0x5B,0x82};
 
 int FW_VERSION = 1;
 String UpdateTime = "8-2-2023";
 const char* firmwareUrlBase = "http://10.0.1.223/firmware/";
 String firmware_name = ""+String(Site)+".ino.nodemcu";
+
+
+
+ String Mac_Station(String MAC) 
+     {
+         if (ChipId == 14477438  ){
+             char locLocation[20]    = "PONG" ; 
+             String Mac_Address = "E8:DB:84:DC:E8:7E"; 
+             byte mac[] = {0xE8,0xDB,0x84,0xDC,0xE8,0x7E};
+         
+            Site =  "spare1";
+         }
+          else
+          
+           Site =  "NULL";    
+  
+    return Site; 
+  }
 
 
 
