@@ -1,2 +1,5 @@
 #AMR Automatic Meter Reading
-��ǹ˹�觢ͧ ����� ����� Server Doopper.com
+ระบบอ่านมิอเตอร์ไฟฟ้าอัตโนมัติ
+Server Doopper.com
+
+By Waiwoot Suriyamanee
