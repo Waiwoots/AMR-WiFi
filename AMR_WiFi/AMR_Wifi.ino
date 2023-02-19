@@ -72,7 +72,6 @@ void WiFiEvent(WiFiEvent_t event) {
 */
 
 
-
 void setup()
 {
 
@@ -84,28 +83,17 @@ void setup()
  
  Serial.begin(9600);  
  while (!Serial) continue;
- 
+
+
   chat.begin(4800);
  while (!chat) continue;
- // digitalWrite(ledPin, LOW); //Turn on the LED
-  //WiFiManager
-  //Local intialization. Once its business is done, there is no need to keep it around
 
-/////////////////////////
- /*   WiFi.disconnect(true);
 
-    delay(1000);
 
-    WiFi.onEvent(WiFiEvent);
-
-*/
-
-//////////////////////
-
-  
 
  // WiFi.mode(WIFI_STA);
   WiFiManager wifiManager;
+  
   if (digitalRead(ConfigWiFi_Pin) == LOW) // Press button
   {
     //reset saved settings
@@ -114,17 +102,37 @@ void setup()
   //fetches ssid and password from EEPROM and tries to connect
   //if it does not connect, it starts an access point with the specified name
   //and goes into a blocking loop awaiting configuration
+   wifiManager.setTimeout(180);
 
 
-wifiManager.autoConnect("AutoConnectAP");
   
-  wifiManager.autoConnect(ESP_AP_NAME.c_str());
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(250);
-    Serial.print(".");
-    digitalWrite(LedGreenOut , LOW);
-  }
+ // wifiManager.autoConnect(ESP_AP_NAME.c_str());
+
+ // wifiManager.autoConnect("AMR - Wifi");
+   if(!wifiManager.autoConnect("AMR - Wifi")) {
+    Serial.println("failed to connect and hit timeout");
+    delay(3000);
+    //reset and try again, or maybe put it to deep sleep
+    ESP.reset();
+    delay(5000);
+  } 
+
+  //if you get here you have connected to the WiFi
+  Serial.println("connected...yeey :)");
+  
+ /* 
+  while (WiFi.status() != WL_CONNECTED )
+     
+   {         delay(250);
+            Serial.print(".");
+            digitalWrite(LedGreenOut , LOW);
+   
+           
+          
+            }
+*/
+
+            
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
@@ -142,6 +150,8 @@ wifiManager.autoConnect("AutoConnectAP");
    
    Scheduler.begin();  
 
+
+ 
 }
 void loop()
 {
