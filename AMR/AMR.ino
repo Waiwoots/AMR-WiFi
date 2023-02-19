@@ -30,19 +30,21 @@
 
 #include <EEPROM.h>
 
- 
+ /*
 #define NET_ENC28J60_EIR          0x1C
 #define NET_ENC28J60_ESTAT        0x1D
 #define NET_ENC28J60_ECON1        0x1F
 #define NET_ENC28J60_EIR_RXERIF   0x01
 #define NET_ENC28J60_ESTAT_BUFFER 0x40
 #define NET_ENC28J60_ECON1_RXEN   0x04
-#define NET_ENC28J60_CHECK_PERIOD 300000UL
+
 
 #define iwdg_init_ms(N)
-#define ETH_RS_PIN D4
+*/
 
-unsigned long timer;
+unsigned long  CHECK_PERIOD =604800000 ; //54000360 = 15 DAY
+#define ETH_RS_PIN D4
+//unsigned long timer;
 
 
 
@@ -81,11 +83,13 @@ LiquidCrystal_I2C lcd(0x27,20,4);
   String myGateWay ;
   String myMac ;
 
-  int LanFailCount = 0;
+ // int LanFailCount = 0;
   ADC_MODE(ADC_VCC);
 
 
-EthernetServer  server(80);
+//EthernetServer  server(80);
+
+EthernetServer server = EthernetServer(80);
 EthernetClient  client;
 
 
@@ -172,46 +176,6 @@ static int32_t locServices          = 6;                                        
 
 
 
-
-//  String information = ("FW_VERSION:"+String(FW_VERSION)+"UpdateTime:"+String(UpdateTime)+"firmwareUrlBase:"+String(firmwareUrlBase+firmware_name) );
-
- //  String information = "FW_VERSION:";
- // int infor_len = information.length()+1 ;
- //char infor_char[infor_len];    
- //information.toCharArray(infor_char,infor_len);       
- //static char locServices1[] = "FW_VERSION:"+Stinng(FW_VERSION);
-/*
-  int myIP_leng = myIP.length()+1;
-  char myIP_char[myIP_leng];  
-  myIP.toCharArray(myIP_char,myIP_leng);
-  static char[]locServices2 = myIP_char ;  
-                            
-  int mySubnet_leng = mySubnet.length();
-  char mySubnet_char[mySubnet_leng];  
-  mySubnet.toCharArray(mySubnet_char,mySubnet_leng);
-  static char[]locServices3  =  mySubnet_char ;
-
-  int myGateWay_leng = myGateWay.length();
-  char myGateWay_char[myGateWay_leng];  
-  myGateWay.toCharArray(mySubnet_char,mySubnet_leng);
-  static char[]locServices4 = myGateWay_char ;
-
-  String MYMAC = "Mac :"+String(myMac);
-  int myMac_leng = MYMAC .length();
-  char myMac_char[myMac_leng];  
-  MYMAC.toCharArray(myMac_char,myMac_leng);
-  static char[]locServices5  =  myMac_char ;
- String StationName = "Station :"+String(Site);
-  int Site_leng = StationName.length();
-  char Site_char[Site_leng];  
-  StationName.toCharArray(Site_char,Site_leng);
-  static char[]locServices6 =  "Site_char ";
-   
-  
-
-
-  */ 
-   
   
 //locServices1,
 static int32_t locServices1,locServices2,locServices3,locServices4,locServices5,locServices6; 
@@ -1468,37 +1432,7 @@ delay(2000);
      Serial.println("An Error has occurred while mounting SPIFFS");
      return;
 }
-/*
-    ArduinoOTA.onEnd([]() {
-    Serial.println("\nEnd");
-  });
-  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-  });
-  ArduinoOTA.onError([](ota_error_t error) {
-    Serial.printf("Error[%u]: ", error);
-    if (error == OTA_AUTH_ERROR) {
-      Serial.println("Auth Failed");
-    } else if (error == OTA_BEGIN_ERROR) {
-      Serial.println("Begin Failed");
-    } else if (error == OTA_CONNECT_ERROR) {
-      Serial.println("Connect Failed");
-    } else if (error == OTA_RECEIVE_ERROR) {
-      Serial.println("Receive Failed");
-    } else if (error == OTA_END_ERROR) {
-      Serial.println("End Failed");
-    }
-  });
 
-  ArduinoOTA.begin(Ethernet.localIP());
-  */
-/////////////////////
-/*
-  timer = millis();
-
-  */
-///////////////////////
- // udp.begin(localPort);
 
  
 
@@ -1556,13 +1490,7 @@ delay(2000);
     //  onbacklight ();
 //  lcd.noBacklight(); //ปิดไฟ หน้าจอ แบคไลท์
 ///////////////////////LCD Set UP//////////////
-///////////////////////////
-  // No authentication by default
-  // ArduinoOTA.setPassword("admin");
 
-  // Password can be set with it's md5 value as well
-  // MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
-  // ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
 
   ArduinoOTA.onStart([]() {
     String type;
@@ -1604,7 +1532,7 @@ delay(2000);
 
  
  
-  upintheair();
+ 
     
   Scheduler.start(&lcd_task);
   Scheduler.start(&tx_rx_task);
@@ -1627,96 +1555,44 @@ void loop() {
   }
 
  
-void upintheair()
-{
-  String fwURL = String( firmwareUrlBase );
-  fwURL.concat( firmware_name );
-  String fwVersionURL = fwURL;
-  fwVersionURL.concat( ".version" );
- 
-  Serial.println( "Checking for firmware updates." );
-  // Serial.print( "MAC address: " );
-  // Serial.println( mac );
-  Serial.print( "Firmware version URL: " );
-  Serial.println( fwVersionURL );
-  
-  WiFiClient client;
-  HTTPClient httpClient;
-  httpClient.begin(client,fwVersionURL );
-  int httpCode = httpClient.GET();
-  if( httpCode == 200 ) {
-    String newFWVersion = httpClient.getString();
- 
-    Serial.print( "Current firmware version: " );
-    Serial.println( FW_VERSION );
-    Serial.print( "Available firmware version: " );
-    Serial.println( newFWVersion );
-    Serial.println( UpdateTime );
- 
-    int newVersion = newFWVersion.toInt();
- 
-    if( newVersion > FW_VERSION ) {
-      Serial.println( "Preparing to update" );
- 
-      String fwImageURL = fwURL;
-      fwImageURL.concat( ".bin" );
-      t_httpUpdate_return ret = ESPhttpUpdate.update(client, fwImageURL );
- 
-      switch(ret) {
-        case HTTP_UPDATE_FAILED:
-          Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
-          break;
- 
-        case HTTP_UPDATE_NO_UPDATES:
-          Serial.println("HTTP_UPDATE_NO_UPDATES");
-          break;
-      }
-    }
-    else {
-      Serial.println( "Already on latest version" );
-    }
-  }
-  else {
-    Serial.print( "Firmware version check failed, got HTTP response code " );
-    Serial.println( httpCode );
-  }
-  httpClient.end();
-}
 
 
+/*
 void eth_reset() { 
   
-  LanFailCount =  LanFailCount +1 ;
-  if (LanFailCount > 10)
-  {
-    ESP.restart();
-  }else
+  //LanFailCount =  LanFailCount +1 ;
+ // if (LanFailCount > 10)
+  //{
+   
+ // }else
   
   pinMode(ETH_RS_PIN, OUTPUT);
   digitalWrite(ETH_RS_PIN, LOW);
   delay(100);
   digitalWrite(ETH_RS_PIN, HIGH);
   pinMode(ETH_RS_PIN, INPUT);
-
   
-  Ethernet.begin(mac, ip, subnet, gateway);
-  server.begin();
+ ESP.restart();
+  
+ // Ethernet.begin(mac, ip, subnet, gateway);
+//  server.begin();
   
   ////////////////SNMP//////////////
-    api_status = Agentuino.begin();
+  //  api_status = Agentuino.begin();
   //
-  if ( api_status == SNMP_API_STAT_SUCCESS ) {
+ // if ( api_status == SNMP_API_STAT_SUCCESS ) {
     //
-    Agentuino.onPduReceive(pduReceived);
+ //   Agentuino.onPduReceive(pduReceived);
     //
-    delay(10);
+//    delay(10);
     //
-    return;
-  }
+ //   return;
+//  }
   ///////////////SNMP//////////////
   
-  Serial.print(F("WEB server is at "));
-  Serial.println(Ethernet.localIP());
+ // Serial.print(F("WEB server is at "));
+//  Serial.println(Ethernet.localIP());
  
 
 }
+*/

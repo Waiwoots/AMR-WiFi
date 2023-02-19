@@ -15,10 +15,10 @@ void setup(){
 void loop() {
  
 
- 
-  if ((millis() - timer) > NET_ENC28J60_CHECK_PERIOD) {    
+
+  if (millis() >= CHECK_PERIOD) {    
   
-      uint8_t stateEconRxen = Enc28J60.readReg((uint8_t) NET_ENC28J60_ECON1) & NET_ENC28J60_ECON1_RXEN;
+   /*    uint8_t stateEconRxen = Enc28J60.readReg((uint8_t) NET_ENC28J60_ECON1) & NET_ENC28J60_ECON1_RXEN;
        // ESTAT.BUFFER rised on TX or RX error
        // I think the test of this register is not necessary - EIR.RXERIF state checking may be enough
        uint8_t stateEstatBuffer = Enc28J60.readReg((uint8_t) NET_ENC28J60_ESTAT) & NET_ENC28J60_ESTAT_BUFFER;
@@ -33,11 +33,15 @@ void loop() {
       
          Serial.println ("ENC28J60 reinit");
 //          Enc28J60.init(netConfig->macAddress);
-         eth_reset();
+      */    
+
+     //  timer = millis();
+        delay(100);
+        ESP.restart();
        }
-    timer = millis();
+       
   
-  }
+
  client = server.available();
     
     if (client) {
@@ -166,9 +170,9 @@ void loop() {
                           
                        }else  if (inStr.indexOf("update") > 0) {
                         
-                     upintheair();
+                    // upintheair();
                     // ArduinoOTA.handle();           
-                     
+                  //   handleSketchDownload();
                        }
                        else  {
                          
@@ -959,7 +963,7 @@ void about() {
           
          client.print("<p class='ST3' >Mac..............." );  client.print (Mac_Address); client.println("</p>");                                       
          
-         client.print("<p class='ST3' >LanFailCount...." ); client.print(String(LanFailCount) );  client.println("</p>");     
+   //      client.print("<p class='ST3' >LanFailCount...." ); client.print(String(LanFailCount) );  client.println("</p>");     
            
                
 

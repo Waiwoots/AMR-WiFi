@@ -5,10 +5,10 @@ byte mac[6] ;
 
 
 
-int FW_VERSION = 1;
-String UpdateTime = "8-2-2023";
-const char* firmwareUrlBase = "http://10.0.1.223/firmware/";
-String firmware_name = ""+String(Site)+".ino.nodemcu";
+int FW_VERSION = 2;
+String UpdateTime = "19-2-2023";
+//const char* firmwareUrlBase = "http://10.0.1.223/firmware/";
+//String firmware_name = ""+String(Site)+".ino.nodemcu";
 
  
 
