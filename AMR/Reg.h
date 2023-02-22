@@ -5,8 +5,8 @@ byte mac[6] ;
 
 
 
-int FW_VERSION = 2;
-String UpdateTime = "19-2-2023";
+int FW_VERSION = 3;
+String UpdateTime = "20-2-2023";
 //const char* firmwareUrlBase = "http://10.0.1.223/firmware/";
 //String firmware_name = ""+String(Site)+".ino.nodemcu";
 
@@ -18,8 +18,15 @@ String Id_Station(int ChipId)
              char locLocation[20]    = "spare1" ; 
              String Mac_Address = "E8:DB:84:DC:E8:7E"; 
              byte mac[] = {0xE8,0xDB,0x84,0xDC,0xE8,0x7E};
-         
+           
             Site =  "spare1";
+         }
+         if (ChipId == 14486900 ){
+             char locLocation[20]    = "DoiTao" ; 
+             String Mac_Address = "E8:DB:84:94:68:EE"; 
+             byte mac[] = {0xE8,0xDB,0x84,0x94,0x68,0xEE};
+        
+            Site =  "DoiTao";
          }
           else
           
