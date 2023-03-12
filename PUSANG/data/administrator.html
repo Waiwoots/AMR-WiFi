@@ -1,0 +1,522 @@
+<SCRIPT>
+
+var xmlHttp=createXmlHttpObject();
+
+function createXmlHttpObject(){
+
+if(window.XMLHttpRequest){
+
+xmlHttp=new XMLHttpRequest();
+
+}else{
+
+xmlHttp=new ActiveXObject('Microsoft.XMLHTTP'); 
+}
+
+return xmlHttp;
+
+}
+
+
+
+function response(){
+
+xmlResponse=xmlHttp.responseXML;
+
+xmldoc = xmlResponse.getElementsByTagName('data');
+
+message = xmldoc[0].firstChild.nodeValue;
+
+document.getElementById('div1').innerHTML=message;
+
+message = xmldoc[1].firstChild.nodeValue;
+
+document.getElementById('div2').innerHTML=message;
+
+message = xmldoc[2].firstChild.nodeValue;
+
+document.getElementById('div3').innerHTML=message;
+
+message = xmldoc[3].firstChild.nodeValue;
+
+document.getElementById('div4').innerHTML=message;
+
+message = xmldoc[4].firstChild.nodeValue;
+
+document.getElementById('div5').innerHTML=message;
+
+message = xmldoc[5].firstChild.nodeValue;
+
+document.getElementById('div6').innerHTML=message;
+
+message = xmldoc[6].firstChild.nodeValue;
+
+document.getElementById('div7').innerHTML=message;
+
+message = xmldoc[7].firstChild.nodeValue;
+
+document.getElementById('div8').innerHTML=message;
+
+message = xmldoc[8].firstChild.nodeValue;
+
+document.getElementById('div9').innerHTML=message;
+
+message = xmldoc[9].firstChild.nodeValue;
+
+document.getElementById('div10').innerHTML=message;
+
+message = xmldoc[10].firstChild.nodeValue;
+
+document.getElementById('div11').innerHTML=message;
+
+message = xmldoc[11].firstChild.nodeValue;
+
+document.getElementById('div12').innerHTML=message;
+
+message = xmldoc[12].firstChild.nodeValue;
+
+document.getElementById('div13').innerHTML=message;
+
+message = xmldoc[13].firstChild.nodeValue;
+
+document.getElementById('div14').innerHTML=message;
+
+message = xmldoc[14].firstChild.nodeValue;
+
+document.getElementById('div15').innerHTML=message;
+
+message = xmldoc[15].firstChild.nodeValue;
+
+document.getElementById('div16').innerHTML=message;
+
+message = xmldoc[16].firstChild.nodeValue;
+
+document.getElementById('div17').innerHTML=message;
+
+message = xmldoc[17].firstChild.nodeValue;
+
+document.getElementById('div18').innerHTML=message;
+
+message = xmldoc[18].firstChild.nodeValue;
+
+document.getElementById('div19').innerHTML=message;
+
+message = xmldoc[19].firstChild.nodeValue;
+
+document.getElementById('div20').innerHTML=message;
+
+message = xmldoc[20].firstChild.nodeValue;
+
+document.getElementById('div21').innerHTML=message;
+
+message = xmldoc[21].firstChild.nodeValue;
+
+document.getElementById('div22').innerHTML=message;
+
+message = xmldoc[22].firstChild.nodeValue;
+
+document.getElementById('div23').innerHTML=message;
+
+message = xmldoc[23].firstChild.nodeValue;
+
+document.getElementById('div24').innerHTML=message;
+
+message = xmldoc[24].firstChild.nodeValue;
+
+document.getElementById('div25').innerHTML=message;
+
+message = xmldoc[25].firstChild.nodeValue;
+
+document.getElementById('div26').innerHTML=message;
+
+message = xmldoc[26].firstChild.nodeValue;
+
+document.getElementById('div27').innerHTML=message;
+
+message = xmldoc[27].firstChild.nodeValue;
+
+document.getElementById('div28').innerHTML=message;
+
+message = xmldoc[28].firstChild.nodeValue;
+
+document.getElementById('div29').innerHTML=message;
+
+message = xmldoc[29].firstChild.nodeValue;
+
+document.getElementById('div30').innerHTML=message;
+
+}
+
+function process(){
+
+xmlHttp.open('GET','xml',true);
+
+xmlHttp.onreadystatechange=response;
+
+xmlHttp.send(null);
+
+setTimeout('process()',1000);
+
+}
+
+</SCRIPT>
+
+ <!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset='utf-8' name='viewport' content='width=device-width, initial-scale=1'>
+
+<title> A M R </title>
+
+<style type='text/css'>
+
+  *{ 
+margin-left: auto;
+margin-right: auto;
+}
+ body {color:#000000;
+background: -webkit-linear-gradient( blue,white);
+background: -o-linear-gradient( blue,white);
+ background: -moz-linear-gradient( blue,white);
+ background: linear-gradient(#013567,white);
+  }
+.datetime{
+color: #fff;
+margin-right: 20px;
+background: #10101E;
+font-family: "Segoe UI", sans-serif;
+width: 250px;
+padding: 15px 10px;
+border: 3px solid #2E94E3;
+border-radius: 5px;
+-webkit-box-reflect: below 1px linear-gradient(transparent, rgba(255, 255, 255, 0.1));
+transition: 0.5s;
+transition-property: background, box-shadow;
+}
+.datetime:hover{
+background: #2E94E3;
+box-shadow: 0 0 30px #2E94E3;
+}
+.date{
+font-size: 12px;
+font-weight: 500;
+text-align: center;
+letter-spacing: 3px;
+}
+.time{
+font-size: 35px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.time span:not(:last-child){
+position: relative;
+margin: 0 6px;
+font-weight: 300;
+text-align: center;
+letter-spacing: 3px;
+}
+.time span:last-child{
+background: #2E94E3;
+font-size: 30px;
+font-weight: 300;
+text-transform: uppercase;
+margin-top: 10px;
+padding: 0 5px;
+border-radius: 3px;
+}
+a  { color:#0000FF; }
+ a:visited { color:#800080; }
+ a:hover { color:#008000; }
+ a:active { color:#FF0000; }
+#div0{
+
+width:400px;
+
+margin:0 auto;
+
+margin-top:50px;
+
+font-size:200%;
+
+color:powderblue;
+
+}
+
+ @font-face {
+ font-family: 'digital7';
+ src: url('font/digital7.ttf') format('truetype'); 
+ }
+ #mySidenav a {
+position: absolute;
+left : -110px;
+transition: 0.3s;
+padding: 15px;
+width: 100px;
+text-decoration: none;
+font-size: 20px;
+color: white;
+border-radius: 0 5px 5px 0 ;
+}
+#mySidenav a:hover {
+left: 0;
+}
+#home {
+top: 20px;
+background-color: #04AA6D;
+}
+#about {
+top: 80px;
+background-color: #2196F3;
+}
+#seting {
+top: 140px;
+background-color: #f44336;
+}
+#help {
+top: 200px;
+background-color: #555;
+}
+img {
+display: block;
+margin-left: auto;
+margin-right: auto;
+}
+.ST1{color:006600;  font-size:100% ;}
+
+.ST2{color:006600; margin-top:1px; font-size:80%; text-align: left }
+
+.ST3{color:EE66AAt; margin-top:1px; font-size:80%; text-align: center }
+
+.ST4{color:0000DD; font-size:100%; text-align: center }
+
+.ST5{color:0000DD; font-size:100%; text-align: center ; background: linear-gradient(#013567,white);}
+
+table {font-family: arial sans-serif; text-align: center; border-collapse: collapse; width: 80%; }
+
+td, th {border: 1px; solid #00EE00; text-align: center; height: 27PX ; }
+
+tr:nth-child(even) {color:#001144; background-color: #E1EBFB; }
+
+li {list-style-type: none;
+client.println(F('client.println(F('client.println(F('font-size: 16pt;
+}
+.mail {
+margin: auto;
+padding-top: 10px;
+padding-bottom: 10px;
+width: 400px;
+background : #D8F1F8;
+border: 1px soild silver;
+}
+.mail h2 {
+margin-left: 38px;
+}
+input {
+font-size: 20pt;
+}
+input:focus, textarea:focus{
+background-color: lightyellow;
+}
+input submit {
+font-size: 12pt;
+}
+.rq {
+color: #FF0000;
+font-size: 10pt;
+}
+</style>
+
+</head>
+
+<body onload='process();initClock();'>
+<div id="mySidenav" class="sidenav">
+<a href="/page1" id="home">Home</a>
+<a href="#" id="about">About</a>
+<a href="seting" id="seting">Seting</a>
+<a href="#" id="help">Help</a>
+</div>
+<img src='tpbs.png' width='100' height='100' alt='ThaiPBS Logo'>
+<div id='div0'>Automatic Meter Reading Station
+CHIANGMON
+</div>
+<br>
+
+<table>
+
+<tr><th></th><th>Mux1</th><th>Mux2</th><th>Mux3</th><th>Mux4</th><th>Mux5</th></tr>
+
+<tr><td class='ST5' >Power Consumption (Wh)</td><td>
+<a href='/Live_Power_Cons1.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div1' class='ST1' > Mux1 </p></a>
+
+</td><td>
+<a href='/Live_Power_Cons2.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div2' class='ST1' > Mux2 </p></a>
+
+</td><td>
+<a href='/Live_Power_Cons3.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div3' class='ST1' > Mux3 </p></a>
+
+</td><td>
+<a href='/Live_Power_Cons4.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div4' class='ST1' > Mux4 </p></a>
+
+</td><td>
+<a href='/Live_Power_Cons5.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div5' class='ST1' > Mux5 </p></a>
+
+</td></tr>
+<tr><td>Active Power(Wh)</td><td>
+<a href='/Live_Power1.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div6' class='ST1' > Power1 </p></a>
+
+</td><td>
+<a href='/Live_Power2.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div7' class='ST1' > Power2 </p></a>
+
+</td><td>
+<a href='/Live_Power3.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div8' class='ST1' > Power3 </p></a>
+
+</td><td>
+<a href='/Live_Power4.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div9' class='ST1' > Power4 </p></a>
+
+</td><td>
+<a href='/Live_Power5.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div10' class='ST1' > Power5 </p></a>
+
+</td></tr>
+<tr><td  class='ST5'>Current(A)</td><td>
+<a href='/Live_Cur1.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div11' class='ST1' > Current1 </p></a/
+
+</td><td>
+<a href='/Live_Cur2.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div12' class='ST1' > Current2 </p></a>
+
+</td><td>
+<a href='/Live_Cur3.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div13' class='ST1' > Current3 </p></a>
+
+</td><td>
+<a href='/Live_Cur4.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div14' class='ST1' > Current4 </p></a>
+
+</td><td>
+<a href='/Live_Cur5.html' onclick='openNewWindow(this.href); return false;' >
+<p id='div15' class='ST1' > Current5 </p></a>
+
+</td></tr>
+<tr><td><a href='/Live_Hz.html' onclick='openNewWindow(this.href); return false;' >Frequency(H)</a></td><td>
+
+<p id='div16' class='ST1' > Frequency1 </p>
+
+</td><td>
+<p id='div17' class='ST1' > Frequency2 </p>
+
+</td><td>
+<p id='div18' class='ST1' > Frequency3 </p>
+
+</td><td>
+<p id='div19' class='ST1' > Frequency4 </p>
+
+</td><td>
+<p id='div20' class='ST1' > Frequency5 </p>
+
+</td></tr>
+<tr><td  class='ST5'><a href='/Live_Factor.html' onclick='openNewWindow(this.href); return false;' >Power Factor</a> </td><td>
+
+<p id='div21' class='ST1' > Factor1 </p>
+
+</td><td>
+<p id='div22' class='ST1' >Factor2 </p>
+
+</td><td>
+<p id='div23' class='ST1' > Factor3 </p>
+
+</td><td>
+<p id='div24' class='ST1' > Factor4 </p>
+
+</td><td>
+<p id='div25' class='ST1' > Factor5 </p>
+
+</td></tr>
+<tr><td><a href='/Live_Volt.html' onclick='openNewWindow(this.href); return false;' >Volt (V)</a></td><td>
+
+<p id='div26' class='ST1'>Volt1 </p>
+
+</td><td>
+<p id='div27' class='ST1' >Volt2 </p>
+
+</td><td>
+<p id='div28' class='ST1' >Volt3 </p>
+
+</td><td>
+<p id='div29' class='ST1' > Volt4 </p>
+
+</td><td>
+<p id='div30' class='ST1' > Volt5 </p>
+
+</td></tr>
+</table>
+ <div class="datetime" >
+ <div class="date">
+ <span id="dayname">Day</span>,
+ <span id="month">Month</span>
+  <span id="daynum">00</span>,
+ <span id="year">Year</span>
+ </div>
+  <div class="time">
+ <span id="hour">00</span>:
+ <span id="minutes">00</span>:
+ <span id="seconds">00</span>
+ <span id="period">AM</span>
+ </div>
+  </div>
+<script>
+function openNewWindow(url) {
+window.open(url, 'pukarock', 'width=880, height=550, scrollbars=yes, resizable=yes')
+}
+</script>
+<script type="text/javascript">
+function updateClock(){
+var now = new Date();
+var dname = now.getDay(),
+mo = now.getMonth(),
+dnum = now.getDate(),
+yr = now.getFullYear(),
+hou = now.getHours(),
+min = now.getMinutes(),
+sec = now.getSeconds(),
+pe = "AM";
+if(hou >= 12){
+pe = "PM";
+}
+if(hou == 0){
+hou = 12;
+}
+if(hou > 12){
+hou = hou - 12;
+}
+Number.prototype.pad = function(digits){
+for(var n = this.toString(); n.length < digits; n = 0 + n);
+return n;
+}
+var months = ["January", "February", "March", "April", "May", "June", "July", "Augest", "September", "October", "November", "December"];
+var week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var ids = ["dayname", "month", "daynum", "year", "hour", "minutes", "seconds", "period"];
+var values = [week[dname], months[mo], dnum.pad(2), yr, hou.pad(2), min.pad(2), sec.pad(2), pe];
+for(var i = 0; i < ids.length; i++)
+document.getElementById(ids[i]).firstChild.nodeValue = values[i];
+}
+function initClock(){
+updateClock();
+window.setInterval("updateClock()", 1);
+}
+</script>
+</body></html>
