@@ -2,9 +2,6 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>    //https://github.com/esp8266/Arduino
-
-
-
 #include <ESP8266HTTPClient.h>
 //#include <DNSServer.h>
 #include <ESP8266WebServer.h>
@@ -47,7 +44,7 @@ unsigned long previousMillis = 0;        // will store last time LED was updated
 const long interval = 400; 
 
  
- int Mux1,Mux2,Mux3,Mux4,Mux5,reboot ;
+ int Mux1,Mux2,Mux3,Mux4,Mux5,reboot  ;
 
  String json ;
 
@@ -70,8 +67,6 @@ void WiFiEvent(WiFiEvent_t event) {
     }
 }
 */
-
-
 void setup()
 {
 
@@ -83,17 +78,28 @@ void setup()
  
  Serial.begin(9600);  
  while (!Serial) continue;
-
-
+ 
   chat.begin(4800);
  while (!chat) continue;
+ // digitalWrite(ledPin, LOW); //Turn on the LED
+  //WiFiManager
+  //Local intialization. Once its business is done, there is no need to keep it around
 
+/////////////////////////
+ /*   WiFi.disconnect(true);
 
+    delay(1000);
 
+    WiFi.onEvent(WiFiEvent);
+
+*/
+
+//////////////////////
+
+  
 
  // WiFi.mode(WIFI_STA);
   WiFiManager wifiManager;
-  
   if (digitalRead(ConfigWiFi_Pin) == LOW) // Press button
   {
     //reset saved settings
@@ -102,37 +108,17 @@ void setup()
   //fetches ssid and password from EEPROM and tries to connect
   //if it does not connect, it starts an access point with the specified name
   //and goes into a blocking loop awaiting configuration
-   wifiManager.setTimeout(180);
 
 
+wifiManager.autoConnect("AutoConnectAP");
   
- // wifiManager.autoConnect(ESP_AP_NAME.c_str());
-
- // wifiManager.autoConnect("AMR - Wifi");
-   if(!wifiManager.autoConnect("AMR - Wifi")) {
-    Serial.println("failed to connect and hit timeout");
-    delay(3000);
-    //reset and try again, or maybe put it to deep sleep
-    ESP.reset();
-    delay(5000);
-  } 
-
-  //if you get here you have connected to the WiFi
-  Serial.println("connected...yeey :)");
-  
- /* 
-  while (WiFi.status() != WL_CONNECTED )
-     
-   {         delay(250);
-            Serial.print(".");
-            digitalWrite(LedGreenOut , LOW);
-   
-           
-          
-            }
-*/
-
-            
+  wifiManager.autoConnect(ESP_AP_NAME.c_str());
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(250);
+    Serial.print(".");
+    digitalWrite(LedGreenOut , LOW);
+  }
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
@@ -142,7 +128,44 @@ void setup()
   Serial.println("Station: "+String(Site));
   Serial.print("ESP.getChip:");
   Serial.println(ESP.getChipId());
+  Serial.println(WiFi.SSID());
+  Serial.println(WiFi.psk());
+  
+/*//////////////////// การ upload firmware ผ่านทาง WiFi \\\\\\\\\\\\*/
+/*     ArduinoOTA.onStart([]() {
+            String type;
+                 if (ArduinoOTA.getCommand() == U_FLASH) {
+                     type = "sketch";
+                        } else { // U_FS
+                                type = "filesystem";
+                                }
+                          // NOTE: if updating FS this would be the place to unmount FS using FS.end()
+                                Serial.println("Start updating " + type);
+                               });
+     ArduinoOTA.onEnd([]() {
+                Serial.println("\nEnd");
+                                 });
+     ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+                Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+                                 });
+    ArduinoOTA.onError([](ota_error_t error) {
+                                         Serial.printf("Error[%u]: ", error);
+                                         if (error == OTA_AUTH_ERROR) {
+                                          Serial.println("Auth Failed");
+                                       } else if (error == OTA_BEGIN_ERROR) {
+                                           Serial.println("Begin Failed");
+                                       } else if (error == OTA_CONNECT_ERROR) {
+                                           Serial.println("Connect Failed");
+                                       } else if (error == OTA_RECEIVE_ERROR) {
+                                          Serial.println("Receive Failed");
+                                      } else if (error == OTA_END_ERROR) {
+                                           Serial.println("End Failed");
+                                       }
+                                           });
+          ArduinoOTA.begin();
 
+          */
+                          /*//////////////////// การ upload firmware ผ่านทาง WiFi \\\\\\\\\\\\*/
 
    upintheair();
   Scheduler.start(&send_task);
@@ -150,8 +173,6 @@ void setup()
    
    Scheduler.begin();  
 
-
- 
 }
 void loop()
 {
@@ -264,4 +285,6 @@ void upintheair()
     Serial.println( httpCode );
   }
   http.end();
+
+  
 }

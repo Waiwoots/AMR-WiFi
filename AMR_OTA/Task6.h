@@ -28,17 +28,11 @@ void setup() {
 
 void loop() {
 
-         
-      
-        
+  
 
+  
 
-
-
-
-
-
-   
+  
   locServices7 = Mux1 ;
   locServices8 = Power1;
   locServices9 = Current1;

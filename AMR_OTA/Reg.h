@@ -3,8 +3,8 @@ const char* ssid    ;
 const char* password ;
 
 
-String Site = ("PUSANG");
-static char locLocation[20]    = "Pusang" ; //   ใช้สำหรับ SNMP
+String Site = ("AMR_OTA");
+static char locLocation[20]    = "AMR_OTA" ; //   ใช้สำหรับ SNMP
 
 
 //String Mac_Address = "E8:DB:84:DC:E8:7E";  //ESP.getChip  14477438
@@ -14,7 +14,7 @@ byte mac[6] ;
 
 int FW_VERSION = 3 ;
 
-String UpdateTime = "10-7-2023";
+String UpdateTime = "30-5-2023";
 //const char* firmwareUrlBase = "http://10.0.1.223/firmware/";
 const char* firmwareUrlBase = "http://www.doopper.com/amr/firmware/";
 String firmware_name = ""+String(Site)+".ino.nodemcu";

@@ -13,12 +13,18 @@ void setup(){
 
 
 void loop() {
- 
+ ////////////////////////
+  if ( millis() >=604800000) // 604800000 = 7 Day //54000360 = 15 DAY
+  {
+    delay(100);
+    ESP.restart();
+  }
+ /////////////////////////
 
-
-  if (millis() >= CHECK_PERIOD) {    
+ /*
+  if ((millis() - timer) > NET_ENC28J60_CHECK_PERIOD) {    
   
-   /*    uint8_t stateEconRxen = Enc28J60.readReg((uint8_t) NET_ENC28J60_ECON1) & NET_ENC28J60_ECON1_RXEN;
+      uint8_t stateEconRxen = Enc28J60.readReg((uint8_t) NET_ENC28J60_ECON1) & NET_ENC28J60_ECON1_RXEN;
        // ESTAT.BUFFER rised on TX or RX error
        // I think the test of this register is not necessary - EIR.RXERIF state checking may be enough
        uint8_t stateEstatBuffer = Enc28J60.readReg((uint8_t) NET_ENC28J60_ESTAT) & NET_ENC28J60_ESTAT_BUFFER;
@@ -29,19 +35,24 @@ void loop() {
        Serial.println(stateEconRxen,HEX);
        Serial.println(stateEstatBuffer,HEX);
        Serial.println(stateEirRxerif,HEX);
+
+
+
+       
      if   (!stateEconRxen || (stateEstatBuffer && stateEirRxerif)) {
       
          Serial.println ("ENC28J60 reinit");
 //          Enc28J60.init(netConfig->macAddress);
-      */    
-
-     //  timer = millis();
-        delay(100);
-        ESP.restart();
+         eth_reset();
        }
-       
-  
+    timer = millis();
 
+    
+  
+  }
+*/
+
+  
  client = server.available();
     
     if (client) {
@@ -163,18 +174,31 @@ void loop() {
                          
                          
                          rebootb();
-                         // รีบูต ESP8266 b   
+                        //  รีบูต ESP8266 b   
 
                          
-                       
+                       }
                           
-                       }else  if (inStr.indexOf("update") > 0) {
-                        
+                       else  if (inStr.indexOf("Update") > 0) {
+
+
+                        Update();
                     // upintheair();
                     // ArduinoOTA.handle();           
-                  //   handleSketchDownload();
+                     
+                       }else  if (inStr.indexOf("OTA_update") > 0) {
+                         
+                        OTA_update();
+                        delay(2000);
+                        upintheair();
+                        //  รีบูต ESP8266 b   
+
+                         
                        }
-                       else  {
+                          
+                    else 
+                    
+                       {
                          
                         page1();
                        }
@@ -575,6 +599,29 @@ void javascriptContent(){
    client.println(F("document.getElementById('div29').innerHTML=message;\n"));  
    client.println(F("message = xmldoc[29].firstChild.nodeValue;\n"));
    client.println(F("document.getElementById('div30').innerHTML=message;\n"));  
+
+   client.println(F("message = xmldoc[30].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div31').innerHTML=message;\n"));   
+   client.println(F("message = xmldoc[31].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div32').innerHTML=message;\n"));  
+   client.println(F("message = xmldoc[32].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div33').innerHTML=message;\n"));    
+   client.println(F("message = xmldoc[33].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div34').innerHTML=message;\n"));  
+   client.println(F("message = xmldoc[34].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div35').innerHTML=message;\n"));
+     
+    
+   client.println(F("message = xmldoc[35].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div36').innerHTML=message;\n"));   
+   client.println(F("message = xmldoc[36].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div37').innerHTML=message;\n"));  
+   client.println(F("message = xmldoc[37].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div38').innerHTML=message;\n"));    
+   client.println(F("message = xmldoc[38].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div39').innerHTML=message;\n"));  
+   client.println(F("message = xmldoc[39].firstChild.nodeValue;\n"));
+   client.println(F("document.getElementById('div40').innerHTML=message;\n"));  
    
    client.println(F("}\n"));
    client.println(F("function process(){\n"));
@@ -757,15 +804,15 @@ void page1() {
       
        
        client.println(F("<tr><td  class='ST5'>Current(A)</td><td>"));
-       client.println(F("<p id='div11' class='ST1' > Current1 </p>\n" ));
+       client.println(F("<p id='div11' class='ST1' > Current11 </p>\n" )); client.println(F("<p id='div31' class='ST1' > Current12 </p>\n" )); client.println(F("<p id='div36' class='ST1' > Current13 </p>\n" ));
        client.println(F("</td><td>"));
-       client.println(F("<p id='div12' class='ST1' > CurrentPower2 </p>\n" ));
+       client.println(F("<p id='div12' class='ST1' > Current21 </p>\n" )); client.println(F("<p id='div32' class='ST1' > Current22 </p>\n" )); client.println(F("<p id='div37' class='ST1' > Current23 </p>\n" ));
        client.println(F("</td><td>"));
-       client.println(F("<p id='div13' class='ST1' > Current3 </p>\n" ));
+       client.println(F("<p id='div13' class='ST1' > Current31 </p>\n" )); client.println(F("<p id='div33' class='ST1' > Current32 </p>\n" )); client.println(F("<p id='div38' class='ST1' > Current33 </p>\n" ));
        client.println(F("</td><td>"));
-       client.println(F("<p id='div14' class='ST1' > Current4 </p>\n" ));
+       client.println(F("<p id='div14' class='ST1' > Current41 </p>\n" )); client.println(F("<p id='div34' class='ST1' > Current42 </p>\n" )); client.println(F("<p id='div39' class='ST1' > Current43 </p>\n" ));
        client.println(F("</td><td>"));
-       client.println(F("<p id='div15' class='ST1' > Current5 </p>\n" ));
+       client.println(F("<p id='div15' class='ST1' > Current51 </p>\n" )); client.println(F("<p id='div35' class='ST1' > Current52 </p>\n" )); client.println(F("<p id='div40' class='ST1' > Current53</p>\n" ));
        client.println(F("</td></tr>"));
          
        client.println(F("<tr><td>Frequency(H)</td><td>"));
@@ -870,7 +917,7 @@ void seting() {
                          client.println(F("</tr>")); 
 
                          client.println(F("<tr>")); 
-                         client.println("<td align='right'> GateWay:</td><td><input  type='text' name='gateway' required pattern='^([0-9]{1,3}\.){3}[0-9]{1,3}$' placeholder='xxx.xxx.xxx.xxx'></td>");                     
+                        client.println("<td align='right'> GateWay:</td><td><input  type='text' name='gateway' required pattern='^([0-9]{1,3}\.){3}[0-9]{1,3}$' placeholder='xxx.xxx.xxx.xxx'></td>");                     
                          client.println(F("</tr>")); 
                          client.println(F("<tr>"));
                           client.println(F("<input  name='code' type='hidden' value='TPBS_ADMIN'>")); 
@@ -910,6 +957,7 @@ void seting() {
                  client.stop();
                                   }
 
+
 void about() {
     Header(); 
     javascriptalert() ;
@@ -936,7 +984,7 @@ void about() {
                                 client.println("<br>");
        client.println("<p align='center' class='ST1' > TPBS </p>\n" );  
            
-         client.print("<p class='ST3' >FW_VERSION......" ); client.print(String(FW_VERSION));client.println("</p>");  
+         client.print("<p class='ST3' >FW_VERSION......" ); client.print(String(FW_VERSION));client.print("    /Update:"); client.print(String( UpdateTime));client.println("</p>");  
 
 
              sec = (locUpTime/100);
@@ -964,8 +1012,11 @@ void about() {
          client.print("<p class='ST3' >Mac..............." );  client.print (Mac_Address); client.println("</p>");                                       
          
    //      client.print("<p class='ST3' >LanFailCount...." ); client.print(String(LanFailCount) );  client.println("</p>");     
-           
-               
+            client.print("<p class='ST3' >LogUpdate...." ); client.print(String(": Library UIPEthernet Ver 2.0.12 ** Reboot Every 7 Day") );  client.println("</p>");        
+           client.print("<p class='ST3' >" ); client.print(String(": Adjust  Current & Active Power -->   3/3/2566         ") );  client.println("</p>");   
+           client.print("<p class='ST3' >" ); client.print(String(": Adjust  Current On LCD  -->   6/4/2566         ") );  client.println("</p>");  
+           client.print("<p class='ST3' >" ); client.print(String(": Up to Ver 3 :  Function  OTA  Over  Wi-fi     --> 26/6/2566 ") );  client.println("</p>");  
+           client.print("<p class='ST3' >" ); client.print(String(": WebPage stable , When  Modbus can not Connect --> 30/6/2566 ") );  client.println("</p>");  
 
                    //////////////////Clock/////////////////
 
@@ -976,6 +1027,111 @@ void about() {
    
                  client.stop();
                                   }
+
+ void Update() {
+    Header(); 
+    javascriptalert() ;
+     Html(); 
+
+
+
+    
+
+
+       client.println(F("<body onload='process();initClock();process();'>"));
+       menu();
+   
+        client.println("<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFIAAABkCAYAAAAVD2crAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAdwSURBVHja7J1dbuJIEMc7o7yP5wTraA8QcoKYE4yR9n3gBBPedqWVAGmk3TfgBMD7SiEniDlBnAOsxnuDnhNku6LyUBTd7Q9sY6BLskiwje2f//XVbpKrt7c34exw++AQOJAOpAPpzIF0IB1IB9KZA3k8u3YI9u3Hb7966qWvFnidffznX+lAFgPoq5eRWjpqGSqAkVNkMYCBevmqllAtEwVw4Fy7OEBQILyC+m4UxMTFyHIAJbrxzCWbcgAFqnBQVoUXBxKTyIIAlAhw7cqf/GXMFEuZ1NYIUVZ5rOszhjjGTOwRFU4OjYUXAxLjILixT96uLBaePUiMg1OsBamBCseuRcwH8QGzsUfeBvX1FMS4gJJl3u3PCqQmGxdOKKSrWRVpCc8GpEGFIm9xTWpKWUUWvz5BgADuUaPCXK5MVNypMotfnxjEACFyFUYIUWYAHGFNCbC7ZePhSYPEunCkWbW0jdaggh9ITblE97+sgtziygJj29Kyb4glkV8kfp4dSAWigxB9tkqiK0cFeuveIVk5yz60GCJAeDZA7Fogghu/EIgQB+/qhNhaRSoYfVQUtxjdOc5ZU2YmobMFmQGxq4NiqCmXZR4ZnAVIS2bWQsREtND0141CbBVIBWWKZUpeiKZEZM3kddnVITN2UREhuxjoMNZF4lJRd8btp5rC/CgQDwJp6XV/uleewtcCUeq6D4tyjwaxNEh1MQuxO3xvMoAxx5iVWEqcTIiGxwatgFgKZAGI3HZqPyxXXgyK3gGDEJ9xoKF1EMsmm5VaXtVyr8mWJltqCuJHA8RJAYizNkCsItn4Qj+8L1jyuaOx0hLnIrVdNydEY4lDBirWVY7w1NYiQtxTSw/cy7LZgEEMDBDf+2H2ngliZIHYwf0ag1hZr43uNTNcMHfpRU7gCwPEWAOc99mDJiFWXZBPxHZOYWpzzYX6mn3XdNYDdjh9g2oHGR1O4xArHf3Bi6OBXzI4nqH9e5/ExFx/ZFFtrInTz2I7Je8oyafqYbQNVRlbFxqy9DytMckgrjBk6LUmHr5gCFg38fy6KZCRAaqwqHHG4qcOdqwgDQ1JxcPKYCCOaJWCZLErZhftG9QocZvQUkYNLBDBGhlzbFKRPwGyWPYlhxqnpiTGWkUOcXKM5NIESImuRi0wZGpJBi58QzE/s0CMjhkXGwWJCURXD84z4qego0ekxKExdChaYnWAfGW/6yAmqTta1BixLM0L9Fa4dJ0geSejLcDJz58tBT4t5EOTy58lSGwJZQbIDXHX0NZakqkmPAHJswaJ9pRTtWGWGjVxMWnL0FntIDMuVBI13RviZ0TaxcAC+ewVybO40BXqJbJ5K9XYFMjYArZjSkQGNc5FS60JkElGecR76sTSDS0vFiSC0U0zCTJKJ93sCXnJiuR1o802ZADDK1gJXATIvBAiQzaXVX5v8GRBIoSdkkc3X5G4biejW7pYRebJuJElm28cyK3NUJWBpTRKzXOKNLu3TLsS7J9tIPm+sQO5C2SG6goKuGzr1dg4SDR4uH9bAJJ0IA0unj4RxGI9MsTFPJ3QRSuS28rSd5+MHR0kjuYkmIQ6pxQX26ZIIbZjjIFhoMOBLKDKmLSGm1MD2abv2UACesbnOM61D1BlhN1PH7N57ECWhzkkNWbam//iQJZ0cXBvjJtQjPsuRpbvyQVR5cgp8nCDmJmQ+tKBPECdQ6GfzdYqy/09m9//+DPrYhLsl2GRf//1rbKsC4ps+1DadU6I6bzErDownSwKjxZ6ZU5IHWua9t3qZnRRmTFZr/vGGKyfq+0TtR4mXOkmZj2p9TPyOfCA7QseS2LtOlHbyNpAlnCtQzqTPoKKNZAhg4eG84P3bwicvW3U/uApS/Wq+z4l7PNDLeNaXZtczAs50U/pHVTvj0mG7WHZ8j5RHk5eA4P+Xcc1qolOSoX9EnZsuPgF688/k33guI8kUT0h5BHZJyLeBee1Ets/kwjn0atTkemF0AuNmRvckp93ZpCp/QQqgYKgNlLr7hDwlEDhgxf35Nhj/OyP5Jyoy68gTmNYonGcetcrvtfFUFJ6sKRo1g5YXLKto8+hfUxWCxJDh+QzPFQEfZ4dWY7vgQdgvHwg29Ob+aLWv5Ebs0TPoDcf1n1HFR9UYhUFea+Lg3jXUzWsMUk8MSXAMsALluiSnkEtXO1pSEi7HB/dNSQ3rpcB4z/izpEmPj7iMRrpbAKDYuj7Kw102Par2P1WbETASFI6ZamRxscU+pqVaDNyIxdM7Z7Yfm8nwPPqkBuU1AoyIxHoXDJgSnsgbj3AzwrIPkFG1r8nxx5n1LlpfAxoUlO/f2dJBeJ2mqwgo0dNKDKwxK8dl2RuGLOBh9Qt+wzcbc74GOU4P4iPfP2cxMsQ46cwqLzWGJknPkaai9qI/ekoDyzo0/iYZMTHTY7z4x1XD9U2EPuPd99jNy3W61bkisSdmJ1Il/ycAu0yld6wmJjQUEHi1l5ngWHkynZyaReUsQ2c9ycSBiprZa/cvzy9jGE0B9KBdOZAOpAOpDMH0oFsp/0vwAAlV6oNqCIoTQAAAABJRU5ErkJggg==' width='100' height='100' alt='ThaiPBS Logo'>"); 
+ 
+      
+        
+       client.println("<div id='div0'>Automatic Meter Reading Station"); client.println(Site) ;client.println("</div>"); 
+       client.println(F("<br>"));        
+       
+         
+          
+
+
+                                client.println("<br>");
+          client.println("<p align='center' class='ST1' > TPBS </p>\n" ); 
+
+          
+          client.println("<p align='center'> <button onclick=\"document.location = 'OTA_update'\">Update!</button>               </p>\n" ); 
+
+
+     
+
+                   //////////////////Clock/////////////////
+
+                         //      Clock();
+
+                 /////////////////////////////////////
+                 client.println(F("</body></html>"));
+   
+                 client.stop();
+                                  }   
+
+
+  void OTA_update() {
+    Header(); 
+    javascriptalert() ;
+     Html(); 
+
+
+
+    
+
+
+       client.println(F("<body onload='process();initClock();process();'>"));
+       menu();
+   
+        client.println("<img src='data:image/png;base64,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' width='100' height='100' alt='ThaiPBS Logo'>"); 
+ 
+      
+        
+       client.println("<div id='div0'>Automatic Meter Reading Station"); client.println(Site) ;client.println("</div>"); 
+       client.println(F("<br>"));        
+       
+         
+          
+
+
+                                client.println("<br>");
+          client.println("<p align='center' class='ST1' > TPBS </p>\n" ); 
+
+     
+
+
+         client.println("<script language=\"JavaScript\">\n" ); 
+          client.println("sec=30;\n" ); 
+          client.println("function tplus() {\n" ); 
+              client.println("sec-=1;\n" ); 
+              client.println(" document.getElementById(\"OutputText\").innerHTML=\"<font color=\'red\'>\" + sec + \" </font> Sec.\";\n" ); 
+             client.println("if (sec==0) {\n" ); 
+           client.println(" document.getElementById(\"OutputText\").innerHTML=\"Go!\";\n" ); 
+             client.println("document.getElementById(\"OutputText2\").innerHTML=\"\";\n" ); 
+             client.println("window.location.replace(\"about\"); \n" ); 
+             client.println(" }\n" ); 
+             client.println("if (sec>0) {setTimeout(\"tplus()\",1000);}\n" ); 
+            client.println(" }\n" ); 
+             client.println("setTimeout(\"tplus()\",1000);\n" ); 
+           client.println(" </script>\n" ); 
+    
+            client.println("<div align=\"center\" id=\"OutputText\"></div>\n" ); 
+           client.println(" <div id=\"OutputText2\">\n" ); 
+            client.println(" <div align=\"center\">Please wait...</div>\n" ); 
+            client.println("</div>\n" ); 
+       
+
+                   //////////////////Clock/////////////////
+
+                         //      Clock();
+
+                 /////////////////////////////////////
+                 client.println(F("</body></html>"));
+   
+                 client.stop();
+                                  }                                                  
 
 void help() {
     Header(); 
@@ -1317,16 +1473,16 @@ void xml() {
   client.println(Current1);
   client.println(F("</data>"));
   client.println(F("<data>"));
-  client.println(Current2);
-  client.println(F("</data>"));
-  client.println(F("<data>"));
-  client.println(Current3);
-  client.println(F("</data>"));
-  client.println(F("<data>"));
   client.println(Current4);
   client.println(F("</data>"));
   client.println(F("<data>"));
-  client.println(Current5);
+  client.println(Current7);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current10);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current13);
   client.println(F("</data>"));  
 
    client.println(F("<data>"));
@@ -1346,7 +1502,7 @@ void xml() {
   client.println(F("</data>"));  
 
   
-   client.println(F("<data>"));
+  client.println(F("<data>"));
   client.println(Factor1 );
   client.println(F("</data>"));
   client.println(F("<data>"));
@@ -1377,6 +1533,41 @@ void xml() {
   client.println(F("<data>"));
   client.println(Volt5);
   client.println(F("</data>")); 
+  ///////////////// Curent L2 ADD/////
+  
+  client.println(F("<data>"));
+  client.println(Current2);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current5);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current8);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current11);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current14);
+  client.println(F("</data>"));
+   
+    ///////////////// Curent L3 ADD/////  
+  client.println(F("<data>"));
+  client.println(Current3);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current6);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current9);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current12);
+  client.println(F("</data>"));
+  client.println(F("<data>"));
+  client.println(Current15);
+  client.println(F("</data>")); 
+  
   client.println(F("</xmldata>"));
    /* client.println(F("<data>"));
   client.println(F("data3"));
@@ -1763,4 +1954,4 @@ void splint_string3(char sz[]){  // สร้างฟังชันต์ช�
 
 
 
-}web_task;
+}web_task; 

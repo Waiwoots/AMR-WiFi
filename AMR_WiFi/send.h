@@ -6,13 +6,12 @@ void setup() {
 
 
 
-   
+ 
   
 }
 
 void loop() {
  
-
  
  // digitalWrite(2, HIGH);
 Serial.print("Version :");Serial.println(FW_VERSION);
@@ -25,9 +24,7 @@ if (x <= 10)
 
       boolean is_even;
 
-   //   if( is_even = x%2 && json== "OK" )
-
-       if( is_even = x%2 && json== "OK"  )
+      if( is_even = x%2 && json== "OK" )
   //     if( is_even = x%2  )
          {            
         
@@ -78,7 +75,7 @@ if (x <= 10)
   {
      boolean is_even;
 
-      if( !is_even&& json== "OK"  )
+      if( !is_even && json == "OK" )
          {            
          
           String url = "http://www.doopper.com/nodemcu/"+String(Site) + String("/add.php?TX=") + String(Site) + String("&Mux1=")+ String(Mux1)+ String("&Mux2=")+ String(Mux2)+ String("&Mux3=")+ String(Mux3)+String("&Mux4=")+ String(Mux4)+String("&Mux5=")+ String(Mux5);              
@@ -123,6 +120,5 @@ private:
 int  x = 1; //ค่าเริ่มต้น ของการกำหนด Loop Update.php & Add.php
 WiFiClient client;
 HTTPClient  http;
-
 
 } send_task;

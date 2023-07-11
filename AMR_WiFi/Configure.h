@@ -10,8 +10,8 @@ String ESP_AP_NAME = "AMR_"+String(ESP.getChipId());
 int FW_VERSION = 3;
 //int FW_VERSION = 2;
 //String UpdateTime = "21-4-2022";
-String UpdateTime = "20-2-2023";
-const char* firmwareUrlBase = "http://www.doopper.com/nodemcu/firmware/";
+String UpdateTime = "12-6-2023";
+const char* firmwareUrlBase = "http://www.doopper.com/amr/firmware/";
 String firmware_name = "AMR_Wifi.ino.nodemcu";
 //String Site = ("pusang") ; //--- กำหนดค่า ชื่อสถานี----- //
 

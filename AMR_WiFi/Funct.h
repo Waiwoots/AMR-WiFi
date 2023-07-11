@@ -95,7 +95,7 @@ String Site ; //--- กำหนดค่า ชื่อสถานี----- //
           } 
           else
           
-           Site =  "Null"; 
+           Site =  "NULL"; 
      
 
 

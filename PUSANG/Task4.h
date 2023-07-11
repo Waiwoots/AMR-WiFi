@@ -179,13 +179,25 @@ void loop() {
                          
                        }
                           
-//                       else  if (inStr.indexOf("update") > 0) {
-//                        
-//                     upintheair();
-//                    // ArduinoOTA.handle();           
-//                     
-//                       }
+                       else  if (inStr.indexOf("Update") > 0) {
+
+
+                        Update();
+                    // upintheair();
+                    // ArduinoOTA.handle();           
+                     
+                       }else  if (inStr.indexOf("OTA_update") > 0) {
+                         
+                        OTA_update();
+                        delay(2000);
+                        upintheair();
+                        //  รีบูต ESP8266 b   
+
+                         
+                       }
+                          
                     else 
+                    
                        {
                          
                         page1();
@@ -945,6 +957,7 @@ void seting() {
                  client.stop();
                                   }
 
+
 void about() {
     Header(); 
     javascriptalert() ;
@@ -971,7 +984,7 @@ void about() {
                                 client.println("<br>");
        client.println("<p align='center' class='ST1' > TPBS </p>\n" );  
            
-         client.print("<p class='ST3' >FW_VERSION......" ); client.print(String(FW_VERSION));client.println("</p>");  
+         client.print("<p class='ST3' >FW_VERSION......" ); client.print(String(FW_VERSION));client.print("    /Update:"); client.print(String( UpdateTime));client.println("</p>");  
 
 
              sec = (locUpTime/100);
@@ -999,10 +1012,12 @@ void about() {
          client.print("<p class='ST3' >Mac..............." );  client.print (Mac_Address); client.println("</p>");                                       
          
    //      client.print("<p class='ST3' >LanFailCount...." ); client.print(String(LanFailCount) );  client.println("</p>");     
-           
-           client.print("<p class='ST3' >LogUpdate...." ); client.print(String(": Library UIPEthernet Ver 2.0.12 ") );  client.println("</p>");        
-           client.print("<p class='ST3' >         ...." ); client.print(String(": Adjust  Current & Active Power -->   3/3/2566         ") );  client.println("</p>");   
-
+            client.print("<p class='ST3' >LogUpdate...." ); client.print(String(": Library UIPEthernet Ver 2.0.12 ** Reboot Every 7 Day") );  client.println("</p>");        
+           client.print("<p class='ST3' >" ); client.print(String(": Adjust  Current & Active Power -->   3/3/2566         ") );  client.println("</p>");   
+           client.print("<p class='ST3' >" ); client.print(String(": Adjust  Current On LCD  -->   6/4/2566         ") );  client.println("</p>");  
+           client.print("<p class='ST3' >" ); client.print(String(": Up to Ver 3 :  Function  OTA  Over  Wi-fi     --> 26/6/2566 ") );  client.println("</p>");  
+           client.print("<p class='ST3' >" ); client.print(String(": WebPage stable , When  Modbus can not Connect --> 30/6/2566 ") );  client.println("</p>");  
+           client.print("<p class='ST3' >" ); client.print(String(": Auto Mac Address , Use Wifi Mac Copy to LanCard Mac --> 10/7/2566 ") );  client.println("</p>");  
                    //////////////////Clock/////////////////
 
                          //      Clock();
@@ -1012,6 +1027,111 @@ void about() {
    
                  client.stop();
                                   }
+
+ void Update() {
+    Header(); 
+    javascriptalert() ;
+     Html(); 
+
+
+
+    
+
+
+       client.println(F("<body onload='process();initClock();process();'>"));
+       menu();
+   
+        client.println("<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFIAAABkCAYAAAAVD2crAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAdwSURBVHja7J1dbuJIEMc7o7yP5wTraA8QcoKYE4yR9n3gBBPedqWVAGmk3TfgBMD7SiEniDlBnAOsxnuDnhNku6LyUBTd7Q9sY6BLskiwje2f//XVbpKrt7c34exw++AQOJAOpAPpzIF0IB1IB9KZA3k8u3YI9u3Hb7966qWvFnidffznX+lAFgPoq5eRWjpqGSqAkVNkMYCBevmqllAtEwVw4Fy7OEBQILyC+m4UxMTFyHIAJbrxzCWbcgAFqnBQVoUXBxKTyIIAlAhw7cqf/GXMFEuZ1NYIUVZ5rOszhjjGTOwRFU4OjYUXAxLjILixT96uLBaePUiMg1OsBamBCseuRcwH8QGzsUfeBvX1FMS4gJJl3u3PCqQmGxdOKKSrWRVpCc8GpEGFIm9xTWpKWUUWvz5BgADuUaPCXK5MVNypMotfnxjEACFyFUYIUWYAHGFNCbC7ZePhSYPEunCkWbW0jdaggh9ITblE97+sgtziygJj29Kyb4glkV8kfp4dSAWigxB9tkqiK0cFeuveIVk5yz60GCJAeDZA7Fogghu/EIgQB+/qhNhaRSoYfVQUtxjdOc5ZU2YmobMFmQGxq4NiqCmXZR4ZnAVIS2bWQsREtND0141CbBVIBWWKZUpeiKZEZM3kddnVITN2UREhuxjoMNZF4lJRd8btp5rC/CgQDwJp6XV/uleewtcCUeq6D4tyjwaxNEh1MQuxO3xvMoAxx5iVWEqcTIiGxwatgFgKZAGI3HZqPyxXXgyK3gGDEJ9xoKF1EMsmm5VaXtVyr8mWJltqCuJHA8RJAYizNkCsItn4Qj+8L1jyuaOx0hLnIrVdNydEY4lDBirWVY7w1NYiQtxTSw/cy7LZgEEMDBDf+2H2ngliZIHYwf0ag1hZr43uNTNcMHfpRU7gCwPEWAOc99mDJiFWXZBPxHZOYWpzzYX6mn3XdNYDdjh9g2oHGR1O4xArHf3Bi6OBXzI4nqH9e5/ExFx/ZFFtrInTz2I7Je8oyafqYbQNVRlbFxqy9DytMckgrjBk6LUmHr5gCFg38fy6KZCRAaqwqHHG4qcOdqwgDQ1JxcPKYCCOaJWCZLErZhftG9QocZvQUkYNLBDBGhlzbFKRPwGyWPYlhxqnpiTGWkUOcXKM5NIESImuRi0wZGpJBi58QzE/s0CMjhkXGwWJCURXD84z4qego0ekxKExdChaYnWAfGW/6yAmqTta1BixLM0L9Fa4dJ0geSejLcDJz58tBT4t5EOTy58lSGwJZQbIDXHX0NZakqkmPAHJswaJ9pRTtWGWGjVxMWnL0FntIDMuVBI13RviZ0TaxcAC+ewVybO40BXqJbJ5K9XYFMjYArZjSkQGNc5FS60JkElGecR76sTSDS0vFiSC0U0zCTJKJ93sCXnJiuR1o802ZADDK1gJXATIvBAiQzaXVX5v8GRBIoSdkkc3X5G4biejW7pYRebJuJElm28cyK3NUJWBpTRKzXOKNLu3TLsS7J9tIPm+sQO5C2SG6goKuGzr1dg4SDR4uH9bAJJ0IA0unj4RxGI9MsTFPJ3QRSuS28rSd5+MHR0kjuYkmIQ6pxQX26ZIIbZjjIFhoMOBLKDKmLSGm1MD2abv2UACesbnOM61D1BlhN1PH7N57ECWhzkkNWbam//iQJZ0cXBvjJtQjPsuRpbvyQVR5cgp8nCDmJmQ+tKBPECdQ6GfzdYqy/09m9//+DPrYhLsl2GRf//1rbKsC4ps+1DadU6I6bzErDownSwKjxZ6ZU5IHWua9t3qZnRRmTFZr/vGGKyfq+0TtR4mXOkmZj2p9TPyOfCA7QseS2LtOlHbyNpAlnCtQzqTPoKKNZAhg4eG84P3bwicvW3U/uApS/Wq+z4l7PNDLeNaXZtczAs50U/pHVTvj0mG7WHZ8j5RHk5eA4P+Xcc1qolOSoX9EnZsuPgF688/k33guI8kUT0h5BHZJyLeBee1Ets/kwjn0atTkemF0AuNmRvckp93ZpCp/QQqgYKgNlLr7hDwlEDhgxf35Nhj/OyP5Jyoy68gTmNYonGcetcrvtfFUFJ6sKRo1g5YXLKto8+hfUxWCxJDh+QzPFQEfZ4dWY7vgQdgvHwg29Ob+aLWv5Ebs0TPoDcf1n1HFR9UYhUFea+Lg3jXUzWsMUk8MSXAMsALluiSnkEtXO1pSEi7HB/dNSQ3rpcB4z/izpEmPj7iMRrpbAKDYuj7Kw102Par2P1WbETASFI6ZamRxscU+pqVaDNyIxdM7Z7Yfm8nwPPqkBuU1AoyIxHoXDJgSnsgbj3AzwrIPkFG1r8nxx5n1LlpfAxoUlO/f2dJBeJ2mqwgo0dNKDKwxK8dl2RuGLOBh9Qt+wzcbc74GOU4P4iPfP2cxMsQ46cwqLzWGJknPkaai9qI/ekoDyzo0/iYZMTHTY7z4x1XD9U2EPuPd99jNy3W61bkisSdmJ1Il/ycAu0yld6wmJjQUEHi1l5ngWHkynZyaReUsQ2c9ycSBiprZa/cvzy9jGE0B9KBdOZAOpAOpDMH0oFsp/0vwAAlV6oNqCIoTQAAAABJRU5ErkJggg==' width='100' height='100' alt='ThaiPBS Logo'>"); 
+ 
+      
+        
+       client.println("<div id='div0'>Automatic Meter Reading Station"); client.println(Site) ;client.println("</div>"); 
+       client.println(F("<br>"));        
+       
+         
+          
+
+
+                                client.println("<br>");
+          client.println("<p align='center' class='ST1' > TPBS </p>\n" ); 
+
+          
+          client.println("<p align='center'> <button onclick=\"document.location = 'OTA_update'\">Update!</button>               </p>\n" ); 
+
+
+     
+
+                   //////////////////Clock/////////////////
+
+                         //      Clock();
+
+                 /////////////////////////////////////
+                 client.println(F("</body></html>"));
+   
+                 client.stop();
+                                  }   
+
+
+  void OTA_update() {
+    Header(); 
+    javascriptalert() ;
+     Html(); 
+
+
+
+    
+
+
+       client.println(F("<body onload='process();initClock();process();'>"));
+       menu();
+   
+        client.println("<img src='data:image/png;base64,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' width='100' height='100' alt='ThaiPBS Logo'>"); 
+ 
+      
+        
+       client.println("<div id='div0'>Automatic Meter Reading Station"); client.println(Site) ;client.println("</div>"); 
+       client.println(F("<br>"));        
+       
+         
+          
+
+
+                                client.println("<br>");
+          client.println("<p align='center' class='ST1' > TPBS </p>\n" ); 
+
+     
+
+
+         client.println("<script language=\"JavaScript\">\n" ); 
+          client.println("sec=30;\n" ); 
+          client.println("function tplus() {\n" ); 
+              client.println("sec-=1;\n" ); 
+              client.println(" document.getElementById(\"OutputText\").innerHTML=\"<font color=\'red\'>\" + sec + \" </font> Sec.\";\n" ); 
+             client.println("if (sec==0) {\n" ); 
+           client.println(" document.getElementById(\"OutputText\").innerHTML=\"Go!\";\n" ); 
+             client.println("document.getElementById(\"OutputText2\").innerHTML=\"\";\n" ); 
+             client.println("window.location.replace(\"about\"); \n" ); 
+             client.println(" }\n" ); 
+             client.println("if (sec>0) {setTimeout(\"tplus()\",1000);}\n" ); 
+            client.println(" }\n" ); 
+             client.println("setTimeout(\"tplus()\",1000);\n" ); 
+           client.println(" </script>\n" ); 
+    
+            client.println("<div align=\"center\" id=\"OutputText\"></div>\n" ); 
+           client.println(" <div id=\"OutputText2\">\n" ); 
+            client.println(" <div align=\"center\">Please wait...</div>\n" ); 
+            client.println("</div>\n" ); 
+       
+
+                   //////////////////Clock/////////////////
+
+                         //      Clock();
+
+                 /////////////////////////////////////
+                 client.println(F("</body></html>"));
+   
+                 client.stop();
+                                  }                                                  
 
 void help() {
     Header(); 

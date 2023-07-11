@@ -1,7 +1,7 @@
 
 
 
-#include <ArduinoOTA.h>
+#include <Arduino.h>
 #include <UIPEthernet.h>
 
 #include <ArduinoJson.h>
@@ -14,7 +14,8 @@
 #include <SoftwareSerial.h>
 #include <ESP8266httpUpdate.h>
 
-
+#include <ESP8266WiFi.h>  
+ 
 
 #include <FS.h>
 #include <LittleFS.h>
@@ -26,30 +27,29 @@
 #include "logo.h";
 
 #include <Scheduler.h> 
-#include<Task.h>
+
 
 #include <EEPROM.h>
-
- /*
+//int address = 0; // แอดเดรสเริ่มเติม การ เขียนอ่าน EEPROM
+//byte value[32];
+ 
 #define NET_ENC28J60_EIR          0x1C
 #define NET_ENC28J60_ESTAT        0x1D
 #define NET_ENC28J60_ECON1        0x1F
 #define NET_ENC28J60_EIR_RXERIF   0x01
 #define NET_ENC28J60_ESTAT_BUFFER 0x40
 #define NET_ENC28J60_ECON1_RXEN   0x04
-
+#define NET_ENC28J60_CHECK_PERIOD 300000UL
 
 #define iwdg_init_ms(N)
-*/
-
-unsigned long  CHECK_PERIOD =604800000 ; //54000360 = 15 DAY
 #define ETH_RS_PIN D4
-//unsigned long timer;
+
+unsigned long timer;
 
 
 
 
-unsigned long previousMillis,previousMillis2 = 0;        // will store last time LED was updated
+unsigned long previousMillis,previousMillis2,PageLoop = 0;        // will store last time LED was updated
 long s, mo, h, d, m, y, mm, ss, hh, _mo, yy;
 long sec;
 
@@ -73,7 +73,7 @@ boolean stateSend = 0;
 
 LiquidCrystal_I2C lcd(0x27,20,4);
 
-  //byte mac[] = {0x54,0x34,0x41,0x30,0x30,0x30};
+ // byte mac[] = {0x54,0x34,0x41,0x30,0x30,0x30};
   byte ip[4];
   byte subnet[4];
   byte gateway[4];
@@ -83,13 +83,11 @@ LiquidCrystal_I2C lcd(0x27,20,4);
   String myGateWay ;
   String myMac ;
 
- // int LanFailCount = 0;
+  int LanFailCount = 0;
   ADC_MODE(ADC_VCC);
 
 
-//EthernetServer  server(80);
-
-EthernetServer server = EthernetServer(80);
+EthernetServer  server(80);
 EthernetClient  client;
 
 
@@ -170,17 +168,9 @@ static char locContact[20]          = "AMR";                         // should b
 static char locName[20]             = "TPBS";                              // should be stored/read from EEPROM - read/write (not done for simplicity)
 //static char locLocation[20]         = site ;                         // should be stored/read from EEPROM - read/write (not done for simplicity)
 static int32_t locServices          = 6;                                        // read-only (static)
-
-
-                                      // read-only (static)
-
-
-
-  
-//locServices1,
-static int32_t locServices1,locServices2,locServices3,locServices4,locServices5,locServices6; 
-
-static int32_t locServices7,locServices8,locServices9,locServices10; 
+                                       // read-only (static)
+static int32_t locServices1,locServices2,locServices3,locServices4,locServices5;  
+static int32_t locServices6,locServices7,locServices8,locServices9,locServices10; 
 static int32_t locServices11,locServices12,locServices13,locServices14,locServices15; 
 static int32_t locServices16,locServices17,locServices18,locServices19,locServices20;  
 static int32_t locServices21,locServices22,locServices23,locServices24,locServices25; 
@@ -436,18 +426,14 @@ void pduReceived()
         strcpy_P ( tmpOIDfs, sysServices35 );        
         pdu.OID.fromString(tmpOIDfs);   
 
-         
-
-            
-      }else if ( strcmp_P(oid, sysServices35 ) == 0 ) {  
+        }else if ( strcmp_P(oid, sysServices35 ) == 0 ) {  
         strcpy_P ( oid, sysServices36);
         strcpy_P ( tmpOIDfs, sysServices36 );        
         pdu.OID.fromString(tmpOIDfs);   
-
-         
+ 
 
             
-      } else if ( strcmp_P(oid, sysServices36 ) == 0 ) {       
+      } else if ( strcmp_P(oid, sysServices35 ) == 0 ) {       
         strcpy_P ( oid, "1.0" );    
 
           
@@ -1287,7 +1273,8 @@ void pduReceived()
 
 
 unsigned int data0,data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,
-             data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,Power,PowerMux1, A_PowerMux1,PowerMux2,PowerMux3,PowerMux4,PowerMux5,Volt,Volt_Point,Hz,HZ,Hz_Point;
+             data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31,data32,data33,data34,data35,data36,data37,data38,data39,data40,
+             Power,PowerMux1, A_PowerMux1,PowerMux2,PowerMux3,PowerMux4,PowerMux5,Volt,Volt_Point,Hz,HZ,Hz_Point;
 
         //uint8_t Mux1,Mux2,Mux3,Mux4,Mux5,Mux6;
    
@@ -1299,7 +1286,11 @@ unsigned int data0,data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,
                 Volt4 ,Hz4 ,Power4,
                 Volt5 ,Hz5 ,Power5;
 
-        float Factor1,Factor2,Factor3,Factor4,Factor5,Current1,Current2,Current3,Current4,Current5,Current6,Current7,Current8,Current9,Current10,Current11,Current12,Current13,Current14,Current15;
+        float Factor1,Factor2,Factor3,Factor4,Factor5,Current1,Current2,Current3,
+                                                      Current4,Current5,Current6,
+                                                      Current7,Current8,Current9,
+                                                      Current10,Current11,Current12,
+                                                      Current13,Current14,Current15;
       //   String  factor1,factor2,factor3,factor4,factor5;
                
       
@@ -1325,19 +1316,56 @@ unsigned int data0,data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,
 
 
 
+
 //----
 void setup() {
 //  Serial.begin(9600,SERIAL_8N1);// ยกเลิก Debug ใช้สื่อสารติดต่อระว่าง ESP8266(1) กับ ESP8266(2)
    
     Serial.begin(4800);// ยกเลิก Debug ใช้สื่อสารติดต่อระว่าง ESP8266(1) กับ ESP8266(2)///
  
+        Mac_Address = (WiFi.macAddress());
+        Serial.print("MAC address: ");
+        Serial.println(WiFi.macAddress());
+         WiFi.macAddress(mac);
+  Serial.print("MAC: ");
+  Serial.print(mac[0],HEX);
+  Serial.print(":");
+  Serial.print(mac[1],HEX);
+  Serial.print(":");
+  Serial.print(mac[2],HEX);
+  Serial.print(":");
+  Serial.print(mac[3],HEX);
+  Serial.print(":");
+  Serial.print(mac[4],HEX);
+  Serial.print(":");
+  Serial.println(mac[5],HEX);
+         
+//         char charBuf[100];
+//         Mac_Address.toCharArray(charBuf, 100);  // คัดลอกอักขระของชุดอักขระไปยังตัวแปร charBuf
+//         splint_string(charBuf); // เรียกใช้งานฟังชั่น Splint String
+//    
+      //  Mac_Address.getBytes(mac,Mac_Address.length()+1);
+       
+
+   /*    
+     
+   for(int i = 0 ; i < Mac_Address.length(); i++ ){
+    
+               //  byte mac[] = Encoding.ASCII.GetBytes(MAC_To_Use);  
+          //  Serial.print("i = ");Serial.println(i);
+            Serial.println(mac[i]);
+         
+                }
+
+*/
     
    while (!Serial) continue;
  // Serial1.begin(9600);//  ** Modbus Module
  // void begin(long speed, int stopbits = 2, char parity = 'E', int databits=5);
   pinMode(D0, OUTPUT);  // For TX Modbus
   pinMode(D3, OUTPUT);  // For RX Modbus
-  Serialnode.begin(4800,SWSERIAL_8N2); // Modbus   Speed parameter
+ // Serialnode.begin(9600,SWSERIAL_8N2); // Modbus   Speed parameter
+   Serialnode.begin(4800,SWSERIAL_8N2); // Modbus   Speed parameter เริ่มใช้ที่ภูซาง 8/3/2565 
  // customSerial->begin(9600, CSERIAL_8E2); 
   
 //  Serial.println("Start...");
@@ -1346,9 +1374,6 @@ void setup() {
 
 ////////////////////////EEPROM/////////////
 Serial.println("BEGIN");
-Serial.print("ESP.getChip:");
-Serial.println(ESP.getChipId());
-Site = Id_Station(ESP.getChipId());
 EEPROM.begin(512);
 
 delay(500);
@@ -1432,7 +1457,37 @@ delay(2000);
      Serial.println("An Error has occurred while mounting SPIFFS");
      return;
 }
+/*
+    ArduinoOTA.onEnd([]() {
+    Serial.println("\nEnd");
+  });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("Error[%u]: ", error);
+    if (error == OTA_AUTH_ERROR) {
+      Serial.println("Auth Failed");
+    } else if (error == OTA_BEGIN_ERROR) {
+      Serial.println("Begin Failed");
+    } else if (error == OTA_CONNECT_ERROR) {
+      Serial.println("Connect Failed");
+    } else if (error == OTA_RECEIVE_ERROR) {
+      Serial.println("Receive Failed");
+    } else if (error == OTA_END_ERROR) {
+      Serial.println("End Failed");
+    }
+  });
 
+  ArduinoOTA.begin(Ethernet.localIP());
+  */
+/////////////////////
+/*
+  timer = millis();
+
+  */
+///////////////////////
+ // udp.begin(localPort);
 
  
 
@@ -1490,8 +1545,14 @@ delay(2000);
     //  onbacklight ();
 //  lcd.noBacklight(); //ปิดไฟ หน้าจอ แบคไลท์
 ///////////////////////LCD Set UP//////////////
+///////////////////////////
+  // No authentication by default
+  // ArduinoOTA.setPassword("admin");
 
-
+  // Password can be set with it's md5 value as well
+  // MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
+  // ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
+/*
   ArduinoOTA.onStart([]() {
     String type;
     if (ArduinoOTA.getCommand() == U_FLASH) {
@@ -1530,9 +1591,9 @@ delay(2000);
 //ArduinoOTA.begin(Ethernet.localIP());
 
 
- 
- 
- 
+ */
+// 
+ // upintheair();
     
   Scheduler.start(&lcd_task);
   Scheduler.start(&tx_rx_task);
@@ -1542,7 +1603,7 @@ delay(2000);
   Scheduler.start(&snmp2_task);
 // Scheduler.start(&backlight_task);
 
-   Scheduler.begin();  
+  Scheduler.begin();  
   
  
 
@@ -1554,45 +1615,283 @@ void loop() {
 
   }
 
+
+
+
+ /*
+void memoryRead ()
+
+{
+ while (address <= 32, address++) {
+    value[address] = EEPROM.read(address);
+
+  Serial.print(address);
+  Serial.print("\t");
+  Serial.print(value[address], DEC);
+  Serial.println();
+
+ 
+  //address = address + 1;
+  
+ 
+  }
+  
+  
+  }
+
+  
+void memoryWrite ()
+
+{
+  address = 0;
+ while (address <= 32, address++) {
+    value[address] = EEPROM.read(address);
+
+   EEPROM.write(address,value[address] );
+
+
+  if (address == 32) {
+
+  EEPROM.commit();
+      Serial.println("EEPROM successfully committed");
+  
+  }
+  
+ 
+  }
+  
+  
+  }
+
+  */
+void upintheair()
+
+{
+
+////////////////////TX/////////////////////////////////////
+StaticJsonDocument<200> doc;
+//  doc["Mux1"] = Mux1;
+//  doc["Mux2"] = Mux2;
+//  doc["Mux3"] = Mux3;
+//  doc["Mux4"] = Mux4;S
+//  doc["Mux5"] = Mux5;
+  doc["reboot"] = 999;
+JsonObject  root =doc.as<JsonObject>();
+
+serializeJson(doc, Serial);
+///////////////////End. TX///////////////////////////
+
+delay(100);
+
+/////////////////// Rx.////////////////////////////
+ if (Serial.available()) 
+  {
+ StaticJsonDocument    <512> doc;     
+ DeserializationError error = deserializeJson(doc, Serial);
+//6  DechatizationError error = dechatizeMsgPack(doc, chat);
+ if (error == DeserializationError::Ok) 
+    {
+
+    //  json = "OK" ;
+      ssid = doc["SSID"];
+      password = doc["PASSWORD"];
+     
+      Serial.println(ssid);
+      Serial.println(password);
  
 
+    }
 
+  
+  else 
+    {
+      // Print error to the "debug" chat port
+      Serial.print("dechatizeJson() returned ");
+      Serial.println(error.c_str());
+    // json = "ON Good" ;
+  
+      // Flush all bytes in the "link" chat port buffer
+      while (Serial.available() > 0)
+        Serial.read();
+    }
+}
+
+///////////////////End. RX////////////////////////
+
+
+//
+// ssid ="TPBS_PRA 2.4GHz"    ;
+// password ="tpbs@pra" ;
+ 
+///////////////////////////////////////////////////
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  uint32_t StopTime = millis();
+
+    while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+
+         if ( millis() - StopTime  >30000 ) { 
+               Serial.println("WiFi Can not connected");
+               Serial.println("reboot ");
+              // delay(500);
+               WiFi.mode(WIFI_OFF);
+               delay(500);
+               ESP.restart() ; 
+    
+            }
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  
+ ///////////////////////////////////////////////////////
+  String fwURL = String( firmwareUrlBase );
+  fwURL.concat( firmware_name );
+  String fwVersionURL = fwURL;
+  fwVersionURL.concat( ".version" );
+ 
+  Serial.println( "Checking for firmware updates." );
+  // Serial.print( "MAC address: " );
+  // Serial.println( mac );
+  Serial.print( "Firmware version URL: " );
+  Serial.println( fwVersionURL );
+  
+ WiFiClient client;
+  HTTPClient http;
+  http.begin(client, fwVersionURL );
+  int httpCode = http.GET();
+  if( httpCode == 200 ) {
+    String newFWVersion = http.getString();
+ 
+    Serial.print( "Current firmware version: " );
+    Serial.println( FW_VERSION );
+    Serial.print( "Available firmware version: " );
+    Serial.println( newFWVersion );
+    Serial.println( UpdateTime );
+ 
+   int newVersion = newFWVersion.toInt();
+ 
+
+    if( newVersion > FW_VERSION ) {
+      Serial.println( "Preparing to update" );
+   //    memoryRead(); //อ่านค่า SSID PASSWORD จาก EEPROM/Flash เข้าสู่ Array
+      String fwImageURL = fwURL;
+      fwImageURL.concat( ".bin" );
+      t_httpUpdate_return ret = ESPhttpUpdate.update( client,fwImageURL );
+//      memoryWrite(); //เขียนค่า SSID PASSWORD จาก Array ไปยัง EEPROM/Flash  
+
+
+     
+ 
+      switch(ret) {
+        case HTTP_UPDATE_FAILED:
+          Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+          break;
+ 
+        case HTTP_UPDATE_NO_UPDATES:
+          Serial.println("HTTP_UPDATE_NO_UPDATES");
+          break;
+          
+      }
+      delay(800);
+      ESP.restart();
+    }
+    else {
+      Serial.println( "Already on latest version" );
+      http.end();
+  
+ 
+    }
+  }
+  else {
+    Serial.print( "Firmware version check failed, got HTTP response code " );
+    Serial.println( httpCode );
+  }
+  http.end();
+
+WiFi.mode(WIFI_OFF);
+ 
+}
 /*
 void eth_reset() { 
   
-  //LanFailCount =  LanFailCount +1 ;
- // if (LanFailCount > 10)
-  //{
-   
- // }else
+  LanFailCount =  LanFailCount +1 ;
+  if (LanFailCount > 10  )
+  {
+    ESP.restart();
+  }else
   
   pinMode(ETH_RS_PIN, OUTPUT);
   digitalWrite(ETH_RS_PIN, LOW);
   delay(100);
   digitalWrite(ETH_RS_PIN, HIGH);
   pinMode(ETH_RS_PIN, INPUT);
+
   
- ESP.restart();
-  
- // Ethernet.begin(mac, ip, subnet, gateway);
-//  server.begin();
+  Ethernet.begin(mac, ip, subnet, gateway);
+  server.begin();
   
   ////////////////SNMP//////////////
-  //  api_status = Agentuino.begin();
+    api_status = Agentuino.begin();
   //
- // if ( api_status == SNMP_API_STAT_SUCCESS ) {
+  if ( api_status == SNMP_API_STAT_SUCCESS ) {
     //
- //   Agentuino.onPduReceive(pduReceived);
+    Agentuino.onPduReceive(pduReceived);
     //
-//    delay(10);
+    delay(10);
     //
- //   return;
-//  }
+    return;
+  }
+
+
   ///////////////SNMP//////////////
   
- // Serial.print(F("WEB server is at "));
-//  Serial.println(Ethernet.localIP());
+  Serial.print(F("WEB server is at "));
+  Serial.println(Ethernet.localIP());
  
 
-}
-*/
+}  */
+
+  /*
+       void splint_string(char sz[]){  // สร้างฟังชันต์ชื่อ splint_string กำหนดตัวแปรนำเข้าชื่อ sz ชนิด char แบบอาเรย์
+        char *p = sz ;// สร้างตัวแปรชื่อ p ชนิด Pointer มีค่าเท่ากับ sz
+        char *str ; // สร้างตัวแปรชื่อ str ชนิด Pointer
+        int counter =0; // สร้างตัวแปรชื่อ counter ชนิด int สำหรับทำการนับครั้งที่ตัด
+       int data_to ; 
+       
+          while ((str = strtok_r(p, ":", &p)) != NULL){ // วนทำลูป while ซ้ำ โดยเรียกฟังชันต์ strtok_r() โดยทำการตัด
+           
+//Serial.print(counter);  // แสดงผลจำนวนครั้งที่ตัด      
+       // Serial.print(counter + String(". "));  // แสดงผลจำนวนครั้งที่ตัด
+      //  Serial.println(str); // แสดงผลค่าที่ตัดได้
+   //     Serial.println(String("0x")+str); // แสดงผลค่าที่ตัดได้
+       
+      // data_to = (String("0x")+str);
+       Serial.print("data_to:");Serial.println(str);
+    
+     //  data_to = str.toInt();
+         
+         data_to = (int)(str) ; //** วิธีแปลง Char Pointer เป็น Int สูดยอดดด...
+        Serial.print("data_to:");Serial.println(data_to);
+     //  Serial.print("data_to:");Serial.println(data_to,HEX);
+      // Serial.print("to_data:");Serial.println(to_data); 
+  mac[counter] =  {data_to};
+       Serial.print("mac:");Serial.println(mac[counter]); 
+      counter++;
+     
+      
+        }
+//byte   mac[] =  {0x12,0x5E,0x12,0x12,0x12,0xf7};
+
+   
+        
+          counter = 0;  // เคลียร์ค่าใน counter เป็น 0
+       }
+        
+    */

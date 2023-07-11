@@ -1,0 +1,97 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>AMD .. Voltage</title>
+		
+		
+		<!-- 1. Add these JavaScript inclusions in the head of your page -->
+		<script type="text/javascript" src="https://www.doopper.com/nodemcu/java/jquery-1.10.1.js"></script>
+	    <script type="text/javascript" src="https://www.doopper.com/nodemcu/java/highcharts.js"></script>
+		<script type="text/javascript" src="https://www.doopper.com/nodemcu/java/modules/stock.js"></script>
+		
+		
+		
+		<!-- 2. Add the JavaScript to initialize the chart on document ready -->
+		<script>
+		var chart; // global
+		
+		/**
+		 * Request data from the server, add it to the graph and set a timeout to request again
+		 */
+		function requestData() {
+			$.ajax({
+				//url: 'live-server-data.php', 
+				url: 'show_Volt.php', 
+				success: function(point) {
+					var series = chart.series[0],
+						shift = series.data.length > 50; // shift if the series is longer than 20
+		
+					// add the point
+					chart.series[0].addPoint(eval(point), true, shift);
+					
+					// call it again after one second
+					setTimeout(requestData, 5000);	
+				},
+				cache: false
+			});
+		}
+			
+		$(document).ready(function() {
+			chart = new Highcharts.Chart({
+				chart: {
+				  
+					renderTo: 'container',					
+					defaultSeriesType: 'spline',
+					//defaultSeriesType: 'pie',
+					events: {
+						load: requestData
+					}
+				},
+				title: {
+					text: 'ChiangMon ',
+				    align: 'center'                       
+				},
+				subtitle: {
+                    text: '( Volt )'
+                },
+				xAxis: {
+					type: 'datetime',
+					tickPixelInterval: 150,
+					maxZoom: 20 * 1000
+				},
+				yAxis: {
+					minPadding: 0.2,
+					maxPadding: 0.2,
+					title: {
+						text: 'Value',
+						margin: 80
+					}
+				},
+				series: [{
+					name: 'Voltage',
+					data: []
+			
+				}]
+			});		
+		});
+		
+	// End... Here
+		
+		//This Option Waiwoot...		
+		
+		
+
+		
+		</script>
+		
+		
+	
+	</head>
+	<body>
+		
+
+		<div id="container" style="width:800px; height: 400px; margin: 0 auto"></div>
+		
+		
+	</body>
+</html>

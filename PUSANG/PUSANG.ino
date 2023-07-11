@@ -14,7 +14,8 @@
 #include <SoftwareSerial.h>
 #include <ESP8266httpUpdate.h>
 
-
+#include <ESP8266WiFi.h>  
+ 
 
 #include <FS.h>
 #include <LittleFS.h>
@@ -29,7 +30,8 @@
 
 
 #include <EEPROM.h>
-
+//int address = 0; // แอดเดรสเริ่มเติม การ เขียนอ่าน EEPROM
+//byte value[32];
  
 #define NET_ENC28J60_EIR          0x1C
 #define NET_ENC28J60_ESTAT        0x1D
@@ -1314,12 +1316,48 @@ unsigned int data0,data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,
 
 
 
+
 //----
 void setup() {
 //  Serial.begin(9600,SERIAL_8N1);// ยกเลิก Debug ใช้สื่อสารติดต่อระว่าง ESP8266(1) กับ ESP8266(2)
    
     Serial.begin(4800);// ยกเลิก Debug ใช้สื่อสารติดต่อระว่าง ESP8266(1) กับ ESP8266(2)///
  
+        Mac_Address = (WiFi.macAddress());
+        Serial.print("MAC address: ");
+        Serial.println(WiFi.macAddress());
+         WiFi.macAddress(mac);
+  Serial.print("MAC: ");
+  Serial.print(mac[0],HEX);
+  Serial.print(":");
+  Serial.print(mac[1],HEX);
+  Serial.print(":");
+  Serial.print(mac[2],HEX);
+  Serial.print(":");
+  Serial.print(mac[3],HEX);
+  Serial.print(":");
+  Serial.print(mac[4],HEX);
+  Serial.print(":");
+  Serial.println(mac[5],HEX);
+         
+//         char charBuf[100];
+//         Mac_Address.toCharArray(charBuf, 100);  // คัดลอกอักขระของชุดอักขระไปยังตัวแปร charBuf
+//         splint_string(charBuf); // เรียกใช้งานฟังชั่น Splint String
+//    
+      //  Mac_Address.getBytes(mac,Mac_Address.length()+1);
+       
+
+   /*    
+     
+   for(int i = 0 ; i < Mac_Address.length(); i++ ){
+    
+               //  byte mac[] = Encoding.ASCII.GetBytes(MAC_To_Use);  
+          //  Serial.print("i = ");Serial.println(i);
+            Serial.println(mac[i]);
+         
+                }
+
+*/
     
    while (!Serial) continue;
  // Serial1.begin(9600);//  ** Modbus Module
@@ -1555,7 +1593,7 @@ delay(2000);
 
  */
 // 
-//   upintheair();
+ // upintheair();
     
   Scheduler.start(&lcd_task);
   Scheduler.start(&tx_rx_task);
@@ -1565,7 +1603,7 @@ delay(2000);
   Scheduler.start(&snmp2_task);
 // Scheduler.start(&backlight_task);
 
-   Scheduler.begin();  
+  Scheduler.begin();  
   
  
 
@@ -1577,62 +1615,209 @@ void loop() {
 
   }
 
+
+
+
+ /*
+void memoryRead ()
+
+{
+ while (address <= 32, address++) {
+    value[address] = EEPROM.read(address);
+
+  Serial.print(address);
+  Serial.print("\t");
+  Serial.print(value[address], DEC);
+  Serial.println();
+
  
-//void upintheair()
-//{
-//  String fwURL = String( firmwareUrlBase );
-//  fwURL.concat( firmware_name );
-//  String fwVersionURL = fwURL;
-//  fwVersionURL.concat( ".version" );
-// 
-//  Serial.println( "Checking for firmware updates." );
-//  // Serial.print( "MAC address: " );
-//  // Serial.println( mac );
-//  Serial.print( "Firmware version URL: " );
-//  Serial.println( fwVersionURL );
-//  
-//  WiFiClient client;
-//  HTTPClient httpClient;
-//  httpClient.begin(client,fwVersionURL );
-//  int httpCode = httpClient.GET();
-//  if( httpCode == 200 ) {
-//    String newFWVersion = httpClient.getString();
-// 
-//    Serial.print( "Current firmware version: " );
-//    Serial.println( FW_VERSION );
-//    Serial.print( "Available firmware version: " );
-//    Serial.println( newFWVersion );
-//    Serial.println( UpdateTime );
-// 
-//    int newVersion = newFWVersion.toInt();
-// 
-//    if( newVersion > FW_VERSION ) {
-//      Serial.println( "Preparing to update" );
-// 
-//      String fwImageURL = fwURL;
-//      fwImageURL.concat( ".bin" );
-//      t_httpUpdate_return ret = ESPhttpUpdate.update(client, fwImageURL );
-// 
-//      switch(ret) {
-//        case HTTP_UPDATE_FAILED:
-//          Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
-//          break;
-// 
-//        case HTTP_UPDATE_NO_UPDATES:
-//          Serial.println("HTTP_UPDATE_NO_UPDATES");
-//          break;
-//      }
-//    }
-//    else {
-//      Serial.println( "Already on latest version" );
-//    }
-//  }
-//  else {
-//    Serial.print( "Firmware version check failed, got HTTP response code " );
-//    Serial.println( httpCode );
-//  }
-//  httpClient.end();
-//}
+  //address = address + 1;
+  
+ 
+  }
+  
+  
+  }
+
+  
+void memoryWrite ()
+
+{
+  address = 0;
+ while (address <= 32, address++) {
+    value[address] = EEPROM.read(address);
+
+   EEPROM.write(address,value[address] );
+
+
+  if (address == 32) {
+
+  EEPROM.commit();
+      Serial.println("EEPROM successfully committed");
+  
+  }
+  
+ 
+  }
+  
+  
+  }
+
+  */
+void upintheair()
+
+{
+
+////////////////////TX/////////////////////////////////////
+StaticJsonDocument<200> doc;
+//  doc["Mux1"] = Mux1;
+//  doc["Mux2"] = Mux2;
+//  doc["Mux3"] = Mux3;
+//  doc["Mux4"] = Mux4;S
+//  doc["Mux5"] = Mux5;
+  doc["reboot"] = 999;
+JsonObject  root =doc.as<JsonObject>();
+
+serializeJson(doc, Serial);
+///////////////////End. TX///////////////////////////
+
+delay(100);
+
+/////////////////// Rx.////////////////////////////
+ if (Serial.available()) 
+  {
+ StaticJsonDocument    <512> doc;     
+ DeserializationError error = deserializeJson(doc, Serial);
+//6  DechatizationError error = dechatizeMsgPack(doc, chat);
+ if (error == DeserializationError::Ok) 
+    {
+
+    //  json = "OK" ;
+      ssid = doc["SSID"];
+      password = doc["PASSWORD"];
+     
+      Serial.println(ssid);
+      Serial.println(password);
+ 
+
+    }
+
+  
+  else 
+    {
+      // Print error to the "debug" chat port
+      Serial.print("dechatizeJson() returned ");
+      Serial.println(error.c_str());
+    // json = "ON Good" ;
+  
+      // Flush all bytes in the "link" chat port buffer
+      while (Serial.available() > 0)
+        Serial.read();
+    }
+}
+
+///////////////////End. RX////////////////////////
+
+
+//
+// ssid ="TPBS_PRA 2.4GHz"    ;
+// password ="tpbs@pra" ;
+ 
+///////////////////////////////////////////////////
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  uint32_t StopTime = millis();
+
+    while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+
+         if ( millis() - StopTime  >30000 ) { 
+               Serial.println("WiFi Can not connected");
+               Serial.println("reboot ");
+              // delay(500);
+               WiFi.mode(WIFI_OFF);
+               delay(500);
+               ESP.restart() ; 
+    
+            }
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  
+ ///////////////////////////////////////////////////////
+  String fwURL = String( firmwareUrlBase );
+  fwURL.concat( firmware_name );
+  String fwVersionURL = fwURL;
+  fwVersionURL.concat( ".version" );
+ 
+  Serial.println( "Checking for firmware updates." );
+  // Serial.print( "MAC address: " );
+  // Serial.println( mac );
+  Serial.print( "Firmware version URL: " );
+  Serial.println( fwVersionURL );
+  
+ WiFiClient client;
+  HTTPClient http;
+  http.begin(client, fwVersionURL );
+  int httpCode = http.GET();
+  if( httpCode == 200 ) {
+    String newFWVersion = http.getString();
+ 
+    Serial.print( "Current firmware version: " );
+    Serial.println( FW_VERSION );
+    Serial.print( "Available firmware version: " );
+    Serial.println( newFWVersion );
+    Serial.println( UpdateTime );
+ 
+   int newVersion = newFWVersion.toInt();
+ 
+
+    if( newVersion > FW_VERSION ) {
+      Serial.println( "Preparing to update" );
+   //    memoryRead(); //อ่านค่า SSID PASSWORD จาก EEPROM/Flash เข้าสู่ Array
+      String fwImageURL = fwURL;
+      fwImageURL.concat( ".bin" );
+      t_httpUpdate_return ret = ESPhttpUpdate.update( client,fwImageURL );
+//      memoryWrite(); //เขียนค่า SSID PASSWORD จาก Array ไปยัง EEPROM/Flash  
+
+
+     
+ 
+      switch(ret) {
+        case HTTP_UPDATE_FAILED:
+          Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+          break;
+ 
+        case HTTP_UPDATE_NO_UPDATES:
+          Serial.println("HTTP_UPDATE_NO_UPDATES");
+          break;
+          
+      }
+      delay(800);
+      ESP.restart();
+    }
+    else {
+      Serial.println( "Already on latest version" );
+      http.end();
+  
+ 
+    }
+  }
+  else {
+    Serial.print( "Firmware version check failed, got HTTP response code " );
+    Serial.println( httpCode );
+  }
+  http.end();
+
+WiFi.mode(WIFI_OFF);
+ 
+}
 /*
 void eth_reset() { 
   
@@ -1672,3 +1857,41 @@ void eth_reset() {
  
 
 }  */
+
+  /*
+       void splint_string(char sz[]){  // สร้างฟังชันต์ชื่อ splint_string กำหนดตัวแปรนำเข้าชื่อ sz ชนิด char แบบอาเรย์
+        char *p = sz ;// สร้างตัวแปรชื่อ p ชนิด Pointer มีค่าเท่ากับ sz
+        char *str ; // สร้างตัวแปรชื่อ str ชนิด Pointer
+        int counter =0; // สร้างตัวแปรชื่อ counter ชนิด int สำหรับทำการนับครั้งที่ตัด
+       int data_to ; 
+       
+          while ((str = strtok_r(p, ":", &p)) != NULL){ // วนทำลูป while ซ้ำ โดยเรียกฟังชันต์ strtok_r() โดยทำการตัด
+           
+//Serial.print(counter);  // แสดงผลจำนวนครั้งที่ตัด      
+       // Serial.print(counter + String(". "));  // แสดงผลจำนวนครั้งที่ตัด
+      //  Serial.println(str); // แสดงผลค่าที่ตัดได้
+   //     Serial.println(String("0x")+str); // แสดงผลค่าที่ตัดได้
+       
+      // data_to = (String("0x")+str);
+       Serial.print("data_to:");Serial.println(str);
+    
+     //  data_to = str.toInt();
+         
+         data_to = (int)(str) ; //** วิธีแปลง Char Pointer เป็น Int สูดยอดดด...
+        Serial.print("data_to:");Serial.println(data_to);
+     //  Serial.print("data_to:");Serial.println(data_to,HEX);
+      // Serial.print("to_data:");Serial.println(to_data); 
+  mac[counter] =  {data_to};
+       Serial.print("mac:");Serial.println(mac[counter]); 
+      counter++;
+     
+      
+        }
+//byte   mac[] =  {0x12,0x5E,0x12,0x12,0x12,0xf7};
+
+   
+        
+          counter = 0;  // เคลียร์ค่าใน counter เป็น 0
+       }
+        
+    */

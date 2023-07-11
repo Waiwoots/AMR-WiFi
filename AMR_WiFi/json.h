@@ -7,8 +7,7 @@ void setup() {
 }
 
 void loop() {
-
-
+  
      //////////////////Led.. blink//////////////   
    
    unsigned long currentMillis = millis();
@@ -52,7 +51,19 @@ void loop() {
       Serial.println(reboot);
       if (reboot == 191){
         ESP.restart();
-      }
+         }
+             else if(reboot == 999 ){ /// 999 หมายถึง OTA             
+                   StaticJsonDocument<200> doc;
+                      doc["SSID"] = WiFi.SSID();
+                      doc["PASSWORD"] = WiFi.psk();
+                       Serial.print("Return :");
+                       Serial.println("USER & Password");
+                               
+                  JsonObject  root =doc.as<JsonObject>();
+                  serializeJson(doc, chat);              
+                 }
+
+      
     }
 
   
@@ -73,6 +84,7 @@ void loop() {
        
  
 private:
+
 
   
     

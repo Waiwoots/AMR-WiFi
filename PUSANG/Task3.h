@@ -230,11 +230,13 @@ static const uint8_t  ModbusMaster::ku8MBInvalidCRC = 0xE3  ModbusMaster invalid
 
 // Serial.print ("Connect Modbus Ok. ReG...> ");Serial.print ("="); Serial.print (i);Serial.println (":");   
      
-     return i ;
+     return value ;
   } 
-
-  // return i ;
-
+   else
+   {
+    delay(300);
+  return 0 ;
+   }
 }
 
 ///////////////////// Write Value to Modbus
